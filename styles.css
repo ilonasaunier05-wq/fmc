@@ -28,3 +28,55 @@ textarea,input,select{width:100%;border-radius:16px;border:1px solid var(--line)
 .api-grid input { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 .compact-list li { margin-bottom:6px; }
 @media (max-width: 760px){ .smart-controls { grid-template-columns:1fr; } }
+
+/* V6 real Smart Scroll feed */
+.smart-scroll-panel { max-width: 980px; margin: 0 auto; }
+.smart-console { position: sticky; top: 56px; z-index: 4; box-shadow: 0 12px 40px rgba(0,0,0,.35); }
+.feed-actions { gap: 8px; }
+.learn-feed { display: grid; gap: 18px; margin: 18px auto 10px; max-width: 860px; }
+.learn-feed-card {
+  min-height: min(78vh, 760px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+  border-radius: 32px;
+  border: 1px solid rgba(244,199,107,.28);
+  background:
+    radial-gradient(circle at 8% 8%, rgba(244,199,107,.18), transparent 26%),
+    radial-gradient(circle at 98% 10%, rgba(167,139,250,.18), transparent 32%),
+    linear-gradient(165deg, rgba(255,255,255,.095), rgba(255,255,255,.04));
+  padding: clamp(22px, 5vw, 42px);
+  box-shadow: var(--shadow);
+  scroll-margin-top: 168px;
+  overflow: hidden;
+}
+.learn-feed-card h3 { font-family: Georgia, serif; font-size: clamp(2rem, 8vw, 4.4rem); line-height: .94; margin: .25rem 0 .8rem; }
+.learn-feed-card .feed-idea { font-size: clamp(1.02rem, 3.8vw, 1.35rem); line-height: 1.62; color: var(--muted); }
+.learn-feed-card .feed-quest { border-left: 4px solid var(--gold); padding: 14px 0 14px 16px; color: var(--muted); font-size: 1.02rem; }
+.learn-feed-card .feed-meta { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.learn-feed-card .feed-number { color: var(--gold); font-weight: 950; letter-spacing: .12em; text-transform: uppercase; font-size: .74rem; }
+.learn-feed-card .feed-buttons { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+.learn-feed-card .source-link { color: var(--gold); text-decoration: none; font-weight: 900; }
+.learn-feed-card .source-link:hover { text-decoration: underline; }
+.feed-sentinel { min-height: 90px; display:flex; align-items:center; justify-content:center; color:var(--muted); }
+.feed-sentinel span { border:1px solid var(--line); border-radius:999px; padding:10px 14px; background:rgba(255,255,255,.06); }
+.feed-empty { min-height: 50vh; display:flex; align-items:center; justify-content:center; text-align:center; color:var(--muted); border:1px dashed var(--line); border-radius:32px; padding:28px; }
+body.feed-focus .hero, body.feed-focus .tabs .tab:not([data-tab="learn"]), body.feed-focus #learn .link-grid, body.feed-focus #learn article.card:not(.smart-console) { display:none !important; }
+body.feed-focus .app-shell { max-width: 100%; padding-left: 10px; padding-right: 10px; }
+body.feed-focus .smart-scroll-panel { max-width: 920px; }
+body.feed-focus .smart-console { top: 0; }
+body.feed-focus .learn-feed-card { min-height: 86vh; }
+@media(max-width:760px){
+  .smart-console { top: 50px; padding: 14px; border-radius: 20px; }
+  .smart-console h2 { font-size: 1.35rem; }
+  .smart-console .muted { font-size: .92rem; }
+  .feed-actions button { flex: 1 1 auto; padding: 10px 12px; }
+  .learn-feed { gap: 14px; margin-left: -2px; margin-right: -2px; }
+  .learn-feed-card { min-height: 76vh; border-radius: 26px; padding: 22px; scroll-margin-top: 190px; }
+  .learn-feed-card .feed-buttons button { flex: 1 1 auto; }
+  body.feed-focus .learn-feed-card { min-height: 88vh; scroll-margin-top: 110px; }
+}
+.learn-feed-card .pill, .smart-console .pill { border-color: var(--line); background:rgba(255,255,255,.08); color:var(--muted); }
+body.feed-focus .smart-console .section-heading .muted, body.feed-focus .smart-console details { display:none; }
+body.feed-focus .smart-console { padding: 12px 14px; }

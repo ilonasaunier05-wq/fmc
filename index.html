@@ -4,20 +4,20 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#3b1b4f" />
-  <meta name="description" content="Romantasy Queen OS V5: infinite knowledge smart scroll, workouts, wardrobe planner, and Samsung reminders." />
+  <meta name="description" content="Romantasy Queen OS V6: full-screen infinite knowledge feed, workouts, wardrobe planner, and Samsung reminders." />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="assets/icon-192.png" />
   <link rel="stylesheet" href="styles.css" />
-  <title>Romantasy Queen OS V5</title>
+  <title>Romantasy Queen OS V6</title>
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-top">
         <div>
-          <p class="eyebrow">Samsung / Android PWA · V5 Infinite Knowledge</p>
+          <p class="eyebrow">Samsung / Android PWA · V6 Real Smart Scroll</p>
           <h1>Romantasy Queen OS</h1>
-          <p class="subtitle">Training, wardrobe, infinite knowledge scroll, API-powered agents, and daily quests.</p>
+          <p class="subtitle">Training, wardrobe, real infinite knowledge feed, API-powered agents, and daily quests.</p>
         </div>
         <button id="installBtn" class="ghost hidden">Install</button>
       </div>
@@ -162,11 +162,16 @@
         </article>
       </section>
 
-      <section id="learn" class="panel">
-        <article class="card smart-card">
-          <p class="small-label">Smart scroller</p>
-          <h2>Replace doomscrolling with tiny power</h2>
-          <p class="muted">This is now an endless knowledge engine: GitHub repos, research papers, old books, tech discoveries, wiki knowledge, public libraries, videos, AI cards, and offline generated cards forever.</p>
+      <section id="learn" class="panel smart-scroll-panel">
+        <article class="card smart-console">
+          <div class="section-heading">
+            <div>
+              <p class="small-label">Smart scroller</p>
+              <h2>Real infinite knowledge feed</h2>
+              <p class="muted">Scroll like social media, but every card gives you something useful: GitHub repos, studies, public-domain books, tech discoveries, wiki knowledge, videos, AI cards, and offline micro-lessons.</p>
+            </div>
+            <button id="toggleFeedFocus" class="ghost">Focus feed</button>
+          </div>
           <div class="smart-controls">
             <label>Mode
               <select id="smartSource">
@@ -194,13 +199,14 @@
               <input id="smartTopic" value="data science, ai agents, productivity, psychology, old books, style, romantasy" />
             </label>
           </div>
-          <div id="onlineSourceStatus" class="notice mini-notice">Auto Universe: rotates through public knowledge sources and falls back to infinite offline generation.</div>
-          <div id="learnCard" class="learn-card"></div>
-          <div class="button-row">
-            <button id="newLearnCard" class="primary">Next endless card</button>
-            <button id="surpriseLearning" class="ghost">Surprise me</button>
-            <button id="saveLearnCard" class="ghost">Save card</button>
-            <button id="markLearned" class="ghost">Mark learned</button>
+          <div id="onlineSourceStatus" class="notice mini-notice">Auto Universe: scroll down and the app loads more cards automatically.</div>
+          <div class="button-row feed-actions">
+            <button id="newLearnCard" class="primary">Add 1 card</button>
+            <button id="loadMoreLearn" class="primary">Load 10 cards</button>
+            <button id="surpriseLearning" class="ghost">Surprise topic</button>
+            <button id="focusLatestCard" class="ghost">Jump latest</button>
+            <button id="toggleSmartAutoload" class="ghost">Auto-load on</button>
+            <button id="clearLearnFeed" class="ghost danger">Clear feed</button>
           </div>
           <details>
             <summary>What does “everything” include?</summary>
@@ -213,6 +219,12 @@
             </ul>
           </details>
         </article>
+
+        <div id="learnFeed" class="learn-feed" aria-live="polite"></div>
+        <div id="learnFeedSentinel" class="feed-sentinel">
+          <span>Loading more knowledge gates…</span>
+        </div>
+
         <article class="card">
           <p class="small-label">Free learning portals</p>
           <h2>Open a gate</h2>

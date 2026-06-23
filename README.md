@@ -1,54 +1,60 @@
-# Romantasy Queen OS V5 — Infinite Knowledge Samsung PWA
+# Romantasy Queen OS V6 — Real Smart Scroll Samsung PWA
 
-A free, installable Samsung/Android web app for daily quests, training, wardrobe planning, mental reset tools, and an infinite Smart Scroll that discovers useful knowledge instead of repeating a fixed list.
+A free, installable Samsung/Android web app that runs as a static site: HTML, CSS, JavaScript, localStorage, IndexedDB, service worker, and a calendar backup.
 
-## What changed in V5
+## Biggest V6 upgrade
 
-Smart Scroll is now a knowledge universe, not just a small deck of cards.
+Smart Scroll is now a real vertical feed instead of one small card box.
 
-Modes included:
+- Big phone-first cards that take most of the screen.
+- Scroll naturally like a social feed.
+- Auto-loads more cards when you near the bottom.
+- “Load 10 cards” button for instant feed building.
+- “Focus feed” mode hides the decorative parts and makes the feed feel more app-like.
+- Each card has Save, Mark learned, Copy, and Open source actions.
+- The visible feed is saved locally, so you can reopen the app and keep scrolling where you were.
 
-- **Auto Universe mix** — rotates through public APIs and falls back to infinite offline generation.
-- **New/useful GitHub repos** — finds recently active public repos that look useful for building, studying, dashboards, AI agents, productivity, data science, PWA tools, etc.
-- **Research studies mix** — rotates through OpenAlex, Crossref, Europe PMC, and arXiv.
-- **Old/public-domain books** — pulls classics and public-domain metadata via Gutendex / Project Gutenberg metadata.
-- **Hacker News discoveries** — pulls top/new tech/startup/project discoveries.
-- **StackExchange answers** — finds community Q&A for programming, data science, stats, literature, worldbuilding, etc.
-- **Wikipedia / Wikimedia** — searches encyclopedia knowledge.
-- **Open Library / Google Books** — book discovery.
-- **Guardian / YouTube / Gemini** — optional API-key-powered sources.
-- **Offline infinite** — generates new micro-lessons forever with no internet.
+## What is inside
 
-Every card ends with a tiny action so it stays intentional: summarize, verify, bookmark for a reason, prototype, write one note, or skip.
-
-## Optional API vault
-
-Keys/tokens are stored only in this browser's local storage on your phone. Do not paste paid/secret keys into a shared device.
-
-Optional fields:
-
-- Gemini API key: personalized generated knowledge cards.
-- GitHub token: optional higher GitHub API limits for public repo searches.
-- OpenAlex API key: optional scholarly API key if required or useful for your usage.
-- Guardian API key: culture/books radar.
-- YouTube Data API key: learning-video cards.
-- Google Books API key: richer book discovery.
-
-No-key/public sources still work: GitHub public search, OpenAlex basic queries, Crossref, Europe PMC, Gutendex, Hacker News Firebase API, Wikipedia/Wikimedia, Open Library, and offline generator.
+- Daily quests with XP, streak, mood weather, and a 30-day progression.
+- A real 4-week no-equipment workout plan with daily training, progressions, and low-energy swaps.
+- Wardrobe photo import using local IndexedDB storage.
+- Outfit oracle by vibe, category, and weather context.
+- Optional Open-Meteo weather lookup using phone location.
+- Real Smart Scroll knowledge feed:
+  - GitHub repos
+  - OpenAlex, Crossref, Europe PMC, arXiv studies
+  - Project Gutenberg/Gutendex public-domain books
+  - Hacker News discoveries
+  - StackExchange answers
+  - Wikipedia/Wikimedia
+  - Open Library
+  - optional Gemini, Guardian, YouTube, Google Books API keys
+  - offline infinite generated cards when internet/API sources fail
+- Free learning portal links.
+- Inner Court Agents: copy-ready ChatGPT prompts for Aelin/Feyre/Poppy/Jude/style/learning.
+- Book Radar with Open Library search and TBR tracker.
+- App notifications where browser rules allow them.
+- `queen_os_samsung_calendar_backup.ics` for reliable daily calendar reminders.
+- Progress JSON export/import.
 
 ## Install on Samsung
 
 1. Upload this folder to a free static host such as Netlify Drop or GitHub Pages.
 2. Open the live HTTPS link in Chrome or Samsung Internet.
 3. Browser menu → Install app / Add page to Home screen.
-4. Open the app from your Home Screen.
+4. Open the app from the Home Screen.
 5. Settings → Enable app notifications.
 6. Also import `queen_os_samsung_calendar_backup.ics` into Google Calendar for reliable reminders.
 
 ## Important limitations
 
+- Photos, API keys, and progress are stored locally in the browser/app storage. If you clear browser storage, they can disappear. Use export backups.
 - Exact background push notifications require a real push server. This app provides local notification timers and a calendar backup instead.
-- Some public APIs can rate-limit or block browser requests depending on their rules/CORS. The app always falls back to another source or offline generation.
-- GitHub/public repo cards are discovery cards, not endorsements. Read the README, check maintenance/security, and never run random code blindly.
-- Research cards are metadata/discovery cards. Do not turn one paper into a life rule; verify, read critically, and prefer consensus for health/science decisions.
-- Photos and progress are stored locally in the browser/app storage. If you clear browser storage, they can disappear. Use export backups.
+- Public APIs can rate-limit or fail temporarily. Smart Scroll falls back to offline generation.
+- Do not blindly run code from random GitHub repos. Read the README, issues, commits, and install instructions first.
+- Research cards are discovery leads, not medical or life advice.
+
+## No-equipment training safety
+
+The workout plan is general wellness content, not medical advice. Stop if you feel sharp pain, dizziness, chest pain, or anything worrying. Use the low-energy swap when needed. Consistency beats punishment.

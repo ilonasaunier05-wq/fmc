@@ -7,7 +7,7 @@ const storage = {
   remove(key){ localStorage.removeItem(key); }
 };
 
-const APP_VERSION = 'v5.0-infinite-knowledge';
+const APP_VERSION = 'v6.0-real-smart-scroll';
 const defaultReminders = [
   {id:'rise', time:'07:30', title:'Aelin: rise, fireheart', body:'Water, curtains, bed, oath. Begin before you feel ready.'},
   {id:'plan', time:'07:40', title:'Jude: choose the strategy', body:'Pick the top 3 moves. Your day needs a commander.'},
@@ -137,6 +137,8 @@ const agentDefs = [
 let selectedMood = null;
 let selectedAgent = 'aelin';
 let currentLearnCard = null;
+let smartFeedLoading = false;
+let smartFeedObserver = null;
 let notificationTimers = [];
 let timerInterval = null;
 
@@ -144,7 +146,7 @@ function init(){
   storage.set('appVersion', APP_VERSION);
   setupTabs(); setupInstall(); registerSW(); initDB(); renderAll(); attachEvents(); scheduleNotificationTimers();
 }
-function renderAll(){ renderBriefing(); renderToday(); renderMood(); renderTraining(getWeek(getProgramDay())); renderLinks(); renderAgents(); renderAlchemy(); renderSavedLearn(); renderTBR(); renderReminderEditor(); renderCloset(); randomLearnCard(false); }
+function renderAll(){ renderBriefing(); renderToday(); renderMood(); renderTraining(getWeek(getProgramDay())); renderLinks(); renderAgents(); renderAlchemy(); renderSavedLearn(); renderTBR(); renderReminderEditor(); renderCloset(); renderApiVault(); initSmartFeed(); }
 function getProgramDay(){ let start = storage.get('startDate', null); if(!start){ start = todayKey(); storage.set('startDate', start); } const d0 = new Date(start+'T00:00:00'); const d1 = new Date(todayKey()+'T00:00:00'); return Math.min(30, Math.max(1, Math.floor((d1-d0)/86400000)+1)); }
 function getWeek(day){ return Math.min(4, Math.ceil(day/7)); }
 function questSetFor(day){ const w=getWeek(day); return w===1?questLibrary.foundation:w===2?questLibrary.body:w===3?questLibrary.strategy:questLibrary.embodiment; }
@@ -308,7 +310,7 @@ function escapeHtml(s){ return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;',
 function toast(msg){ const n=document.createElement('div'); n.textContent=msg; Object.assign(n.style,{position:'fixed',left:'50%',bottom:'22px',transform:'translateX(-50%)',background:'rgba(0,0,0,.82)',color:'white',border:'1px solid rgba(255,255,255,.2)',padding:'12px 16px',borderRadius:'999px',zIndex:99,boxShadow:'0 10px 30px rgba(0,0,0,.35)'}); document.body.appendChild(n); setTimeout(()=>n.remove(),2200); }
 
 
-// --- V5 Infinite Knowledge Smart Scroll + API Vault --------------------------
+// --- V6 Infinite Knowledge Smart Scroll + API Vault --------------------------
 const smartDomains = [
   'data science', 'AI agents', 'open-source tools', 'psychology', 'romantasy craft', 'public-domain classics',
   'research methods', 'history', 'philosophy', 'style theory', 'financial calm', 'language precision',
@@ -418,10 +420,10 @@ async function nextSmartCard(advance=true){
       if(src==='youtube') card=await fetchYoutubeCard(topic, keys.youtube);
       if(src==='googlebooks') card=await fetchGoogleBooksCard(topic, keys.googleBooks);
       if(src==='offline') card=generateOfflineSmartCard(topic);
-      if(card){ displayLearnCard(card, advance); setSourceStatus(`Source: ${card.source || src}. ${card.note || 'Read, save, or act — do not fall into the void.'}`); return; }
+      if(card){ displayLearnCard(card, advance); setSourceStatus(`Source: ${card.source || src}. ${card.note || 'Read, save, or act — do not fall into the void.'}`); return card; }
     } catch(e){ console.warn('Smart source failed', src, e); }
   }
-  const fallback=generateOfflineSmartCard(topic); displayLearnCard(fallback, advance); setSourceStatus('Offline generator used. This never runs out.');
+  const fallback=generateOfflineSmartCard(topic); displayLearnCard(fallback, advance); setSourceStatus('Offline generator used. This never runs out.'); return fallback;
 }
 function generateOfflineSmartCard(topic){
   const domain = randomFrom(smartDomains); const vibe=randomFrom(smartVibes); const idea=randomFrom(smartIdeas); const verb=randomFrom(smartVerbs); const quest=randomFrom(microQuests);
@@ -429,13 +431,116 @@ function generateOfflineSmartCard(topic){
   const title = `${vibes[vibe]?.emoji || '✨'} ${idea[0]} · ${domain}`;
   return {cat:`Infinite offline · ${vibe}`, title, idea:`${idea[1]} Focus lens: ${focus}. Your move is to ${verb} something tiny rather than consume more content.`, action:quest, source:'Offline generator', generated:true, note:'Generated forever with no internet.'};
 }
+function getSmartFeedCards(){ return storage.get('smartFeedCards',[]); }
+function setSmartFeedCards(cards){ storage.set('smartFeedCards', cards.slice(-120)); }
+function normalizeSmartCard(card){
+  return {...card, id: card.id || `${Date.now()}-${Math.random().toString(16).slice(2)}`, date: card.date || new Date().toLocaleString()};
+}
 function displayLearnCard(card, advance=true){
-  currentLearnCard=card;
-  const used=storage.get('learnCardHistory',[]); if(advance) storage.set('learnCardHistory',[card.title,...used].slice(0,120));
+  const normalized=normalizeSmartCard(card);
+  currentLearnCard=normalized;
+  const used=storage.get('learnCardHistory',[]); if(advance) storage.set('learnCardHistory',[normalized.title,...used].slice(0,120));
+  const cards=getSmartFeedCards();
+  cards.push(normalized);
+  setSmartFeedCards(cards);
+  renderSmartFeed();
+  return normalized;
+}
+function smartFeedCardHtml(card, index){
   const url = card.url ? `<a class="source-link" target="_blank" rel="noopener" href="${escapeHtml(card.url)}">Open source ↗</a>` : '';
   const source = card.source ? `<span class="pill">${escapeHtml(card.source)}</span>` : '';
   const topic = card.topic ? `<span class="pill">${escapeHtml(card.topic)}</span>` : '';
-  $('#learnCard').innerHTML=`<div class="meta-row"><span class="category">${escapeHtml(card.cat || 'Smart Scroll')}</span>${source}${topic}</div><h3>${escapeHtml(card.title || 'Untitled card')}</h3><p>${escapeHtml(card.idea || '')}</p><p class="action"><strong>Quest:</strong> ${escapeHtml(card.action || 'Turn this into one small action today.')}</p>${url}`;
+  const cat = `<span class="pill">${escapeHtml(card.cat || 'Smart Scroll')}</span>`;
+  return `<article class="learn-feed-card" data-feed-id="${escapeHtml(card.id)}">
+    <div>
+      <div class="feed-meta"><span class="feed-number">Gate ${index+1}</span>${cat}${source}${topic}</div>
+      <h3>${escapeHtml(card.title || 'Untitled card')}</h3>
+      <p class="feed-idea">${escapeHtml(card.idea || '')}</p>
+    </div>
+    <div>
+      <p class="feed-quest"><strong>Quest:</strong> ${escapeHtml(card.action || 'Turn this into one small action today.')}</p>
+      <div class="feed-buttons">
+        ${url}
+        <button class="ghost" data-save-feed="${escapeHtml(card.id)}">Save</button>
+        <button class="ghost" data-learn-feed="${escapeHtml(card.id)}">Mark learned</button>
+        <button class="ghost" data-copy-feed="${escapeHtml(card.id)}">Copy</button>
+      </div>
+    </div>
+  </article>`;
+}
+function renderSmartFeed(){
+  const feed=$('#learnFeed'); if(!feed) return;
+  const cards=getSmartFeedCards();
+  if(cards.length){
+    feed.innerHTML=cards.map((card,i)=>smartFeedCardHtml(card,i)).join('');
+  } else {
+    feed.innerHTML='<div class="feed-empty"><div><h2>No gates open yet.</h2><p>Tap “Load 10 cards” or just scroll to begin the real Smart Scroll.</p></div></div>';
+  }
+  $$('.learn-feed-card [data-save-feed]').forEach(btn=>btn.addEventListener('click',()=>saveFeedCard(btn.dataset.saveFeed)));
+  $$('.learn-feed-card [data-learn-feed]').forEach(btn=>btn.addEventListener('click',()=>markFeedCardLearned(btn.dataset.learnFeed)));
+  $$('.learn-feed-card [data-copy-feed]').forEach(btn=>btn.addEventListener('click',()=>copyFeedCard(btn.dataset.copyFeed)));
+}
+async function loadSmartFeed(amount=6, options={}){
+  if(smartFeedLoading) return;
+  smartFeedLoading=true;
+  const statusStart = amount > 1 ? `Opening ${amount} knowledge gates...` : 'Opening a knowledge gate...';
+  setSourceStatus(statusStart);
+  for(let i=0;i<amount;i++){
+    await nextSmartCard(true);
+  }
+  smartFeedLoading=false;
+  updateSmartAutoLoadButton();
+  if(options.scrollLatest) focusLatestCard();
+}
+function initSmartFeed(){
+  renderSmartFeed();
+  updateSmartAutoLoadButton();
+  setupSmartFeedObserver();
+  if(getSmartFeedCards().length===0) loadSmartFeed(8);
+}
+function setupSmartFeedObserver(){
+  const sentinel=$('#learnFeedSentinel');
+  if(!sentinel || !('IntersectionObserver' in window)) return;
+  if(smartFeedObserver) smartFeedObserver.disconnect();
+  smartFeedObserver=new IntersectionObserver(entries=>{
+    if(entries.some(e=>e.isIntersecting) && storage.get('smartAutoLoad',true)) loadSmartFeed(4);
+  }, {root:null, rootMargin:'650px 0px', threshold:.01});
+  smartFeedObserver.observe(sentinel);
+}
+function focusLatestCard(){
+  const cards=$$('.learn-feed-card');
+  const latest=cards[cards.length-1];
+  if(latest) latest.scrollIntoView({behavior:'smooth', block:'start'});
+}
+function saveFeedCard(id){
+  const card=getSmartFeedCards().find(c=>c.id===id); if(!card) return;
+  currentLearnCard=card; saveCurrentLearn();
+}
+function markFeedCardLearned(id){
+  const card=getSmartFeedCards().find(c=>c.id===id); if(!card) return;
+  currentLearnCard=card; markLearned();
+}
+async function copyFeedCard(id){
+  const card=getSmartFeedCards().find(c=>c.id===id); if(!card) return;
+  const text=[card.title, '', card.idea, '', `Quest: ${card.action}`, card.url ? `Source: ${card.url}` : ''].filter(Boolean).join('\n');
+  await navigator.clipboard.writeText(text); toast('Card copied.');
+}
+function clearSmartFeed(){
+  if(!confirm('Clear the visible Smart Scroll feed? Saved cards stay saved.')) return;
+  storage.remove('smartFeedCards'); renderSmartFeed(); toast('Feed cleared.');
+}
+function toggleSmartAutoload(){
+  const next=!storage.get('smartAutoLoad',true);
+  storage.set('smartAutoLoad',next);
+  updateSmartAutoLoadButton();
+  toast(next?'Auto-load on.':'Auto-load paused.');
+}
+function updateSmartAutoLoadButton(){
+  const btn=$('#toggleSmartAutoload'); if(btn) btn.textContent=storage.get('smartAutoLoad',true)?'Auto-load on':'Auto-load paused';
+}
+function toggleFeedFocus(){
+  document.body.classList.toggle('feed-focus');
+  const btn=$('#toggleFeedFocus'); if(btn) btn.textContent=document.body.classList.contains('feed-focus')?'Exit focus':'Focus feed';
 }
 async function fetchGithubRepoCard(topic, token){
   const seed=primaryTopic(topic, randomFrom(repoSeeds));
@@ -586,13 +691,13 @@ async function fetchGeminiCard(topic, key){
   throw lastErr || new Error('gemini failed');
 }
 function surpriseLearning(){
-  const topic=randomFrom(surpriseTopics); if($('#smartTopic')) $('#smartTopic').value=topic; if($('#smartSource')) $('#smartSource').value='auto'; nextSmartCard(true);
+  const topic=randomFrom(surpriseTopics); if($('#smartTopic')) $('#smartTopic').value=topic; if($('#smartSource')) $('#smartSource').value='auto'; loadSmartFeed(6, {scrollLatest:true});
 }
 function renderSavedLearn(){
   const saved=storage.get('savedLearnCards',[]);
   $('#savedLearnCards').innerHTML=saved.length?saved.map(c=>`<div class="history-item"><strong>${escapeHtml(c.title)}</strong><p class="muted">${escapeHtml(c.idea)}</p><small>${escapeHtml(c.date)}${c.source?' · '+escapeHtml(c.source):''}</small></div>`).join(''):'<p class="muted">No saved cards yet.</p>';
 }
-function renderAll(){ renderBriefing(); renderToday(); renderMood(); renderTraining(getWeek(getProgramDay())); renderLinks(); renderAgents(); renderAlchemy(); renderSavedLearn(); renderTBR(); renderReminderEditor(); renderCloset(); renderApiVault(); randomLearnCard(false); }
+function renderAll(){ renderBriefing(); renderToday(); renderMood(); renderTraining(getWeek(getProgramDay())); renderLinks(); renderAgents(); renderAlchemy(); renderSavedLearn(); renderTBR(); renderReminderEditor(); renderCloset(); renderApiVault(); initSmartFeed(); }
 function attachEvents(){
   $('#saveMood')?.addEventListener('click', saveMood);
   $('#resetToday')?.addEventListener('click',()=>{ if(!confirm('Reset today’s checkboxes?')) return; const key=todayKey(); const c=getCompletions(); Object.keys(c).forEach(k=>{if(k.startsWith(key+'-')) delete c[k];}); setCompletions(c); renderToday(); });
@@ -601,7 +706,7 @@ function attachEvents(){
   $$('.weekBtn').forEach(b=>b.addEventListener('click',()=>renderTraining(Number(b.dataset.week))));
   $('#startTimer')?.addEventListener('click',()=>startTimer(30)); $('#stopTimer')?.addEventListener('click',()=>{ clearInterval(timerInterval); $('#timerDisplay').textContent='00:00'; $('#timerStep').textContent='Stopped. Choose the next kind move.'; });
   $('#saveClothing')?.addEventListener('click',saveClothing); $('#buildOutfit')?.addEventListener('click',buildOutfit); $('#getWeather')?.addEventListener('click',fetchWeather); $('#exportWardrobe')?.addEventListener('click',exportWardrobe);
-  $('#newLearnCard')?.addEventListener('click',()=>nextSmartCard(true)); $('#surpriseLearning')?.addEventListener('click',surpriseLearning); $('#saveLearnCard')?.addEventListener('click',saveCurrentLearn); $('#markLearned')?.addEventListener('click',markLearned);
+  $('#newLearnCard')?.addEventListener('click',()=>loadSmartFeed(1,{scrollLatest:true})); $('#loadMoreLearn')?.addEventListener('click',()=>loadSmartFeed(10,{scrollLatest:true})); $('#surpriseLearning')?.addEventListener('click',surpriseLearning); $('#focusLatestCard')?.addEventListener('click',focusLatestCard); $('#toggleSmartAutoload')?.addEventListener('click',toggleSmartAutoload); $('#clearLearnFeed')?.addEventListener('click',clearSmartFeed); $('#toggleFeedFocus')?.addEventListener('click',toggleFeedFocus); $('#saveLearnCard')?.addEventListener('click',saveCurrentLearn); $('#markLearned')?.addEventListener('click',markLearned);
   $('#copyAgentPrompt')?.addEventListener('click',copyAgentPrompt); $('#saveAgentNote')?.addEventListener('click',saveAgentNote);
   $('#searchBooks')?.addEventListener('click',searchBooks);
   $('#saveAlchemy')?.addEventListener('click',saveAlchemy);

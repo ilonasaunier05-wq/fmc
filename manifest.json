@@ -1,7 +1,7 @@
 {
-  "name": "Romantasy Queen OS V5",
+  "name": "Romantasy Queen OS V6",
   "short_name": "Queen OS",
-  "description": "Daily quests, workouts, wardrobe planner, infinite knowledge smart scroll and romantasy lifestyle system.",
+  "description": "Daily quests, workouts, wardrobe planner, real full-screen infinite knowledge feed and romantasy lifestyle system.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

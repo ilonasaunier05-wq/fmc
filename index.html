@@ -3,43 +3,46 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#3b1b4f" />
-  <meta name="description" content="Romantasy Queen OS V6: full-screen infinite knowledge feed, workouts, wardrobe planner, and Samsung reminders." />
+  <meta name="theme-color" content="#3d2455" />
+  <meta name="description" content="Queen OS Lifestyle V7: a romantasy-inspired life command center for Samsung." />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="assets/icon-192.png" />
   <link rel="stylesheet" href="styles.css" />
-  <title>Romantasy Queen OS V6</title>
+  <title>Queen OS Lifestyle V7</title>
 </head>
 <body>
-  <div class="app-shell">
+  <div id="toast" class="toast"></div>
+  <div class="shell">
     <header class="hero">
-      <div class="hero-top">
+      <div class="topline">
         <div>
-          <p class="eyebrow">Samsung / Android PWA · V6 Real Smart Scroll</p>
-          <h1>Romantasy Queen OS</h1>
-          <p class="subtitle">Training, wardrobe, real infinite knowledge feed, API-powered agents, and daily quests.</p>
+          <p class="eyebrow">Separated app · Lifestyle Court OS V7</p>
+          <h1>Queen OS Lifestyle</h1>
+          <p class="subtitle">Your daily command center for body, mind, space, style, meals, routines, and becoming her.</p>
         </div>
         <button id="installBtn" class="ghost hidden">Install</button>
       </div>
-      <article class="card glow briefing-card">
-        <p class="small-label">Today’s briefing</p>
-        <h2 id="briefingTitle">Open the gates.</h2>
-        <p id="briefingText" class="muted"></p>
-        <div class="button-row">
-          <button id="shareBriefing" class="ghost">Share / copy briefing</button>
-          <button id="panicButton" class="ghost danger">I’m overwhelmed</button>
+      <article class="card glow">
+        <p class="small-label">Today’s court order</p>
+        <h2 id="briefTitle">Open the gates.</h2>
+        <p id="briefText" class="muted"></p>
+        <div class="quickrow">
+          <button id="minimumDay" class="ghost">Minimum day mode</button>
+          <button id="copyBrief" class="ghost">Copy briefing</button>
+          <button id="overwhelm" class="ghost danger">I’m overwhelmed</button>
         </div>
       </article>
     </header>
 
-    <nav class="tabs" aria-label="App sections">
+    <nav class="tabs" aria-label="sections">
       <button class="tab active" data-tab="today">Today</button>
-      <button class="tab" data-tab="training">Training</button>
-      <button class="tab" data-tab="wardrobe">Wardrobe</button>
-      <button class="tab" data-tab="learn">Smart Scroll</button>
-      <button class="tab" data-tab="agents">Agents</button>
-      <button class="tab" data-tab="radar">Book Radar</button>
+      <button class="tab" data-tab="rituals">Rituals</button>
+      <button class="tab" data-tab="body">Body</button>
+      <button class="tab" data-tab="meals">Meals</button>
       <button class="tab" data-tab="mind">Mind</button>
+      <button class="tab" data-tab="style">Style</button>
+      <button class="tab" data-tab="realm">Realm</button>
+      <button class="tab" data-tab="review">Review</button>
       <button class="tab" data-tab="settings">Settings</button>
     </nav>
 
@@ -47,336 +50,123 @@
       <section id="today" class="panel active">
         <div class="grid two">
           <article class="card">
-            <p class="small-label">Day <span id="programDay">1</span> of 30</p>
-            <h2 id="dayTitle">Foundation of the Court</h2>
-            <p id="dayDescription" class="muted"></p>
-            <div class="meter" aria-label="daily progress"><span id="progressBar"></span></div>
-            <p class="muted"><span id="xp">0</span> XP · streak <span id="streak">0</span> days · level <span id="level">1</span></p>
+            <p class="small-label">Day <span id="dayNum">1</span> · <span id="arcName">Foundation Arc</span></p>
+            <h2 id="todayTitle">Visible proof, not perfection</h2>
+            <div class="meter"><span id="progress"></span></div>
+            <p class="muted"><span id="xp">0</span> XP · streak <span id="streak">0</span> · level <span id="level">1</span></p>
           </article>
           <article class="card">
-            <p class="small-label">Mood weather</p>
-            <div class="mood-row" id="moodButtons"></div>
-            <textarea id="moodNote" placeholder="One honest sentence. No performance."></textarea>
+            <p class="small-label">Mood + energy</p>
+            <div class="moodgrid" id="moodButtons"></div>
+            <textarea id="moodNote" placeholder="One honest sentence. Example: tired but willing."></textarea>
             <button id="saveMood" class="primary">Save mood</button>
           </article>
         </div>
 
         <article class="card">
-          <div class="section-heading">
-            <div>
-              <p class="small-label">Today’s quests</p>
-              <h2>Complete the visible proof</h2>
-            </div>
+          <div class="section-title">
+            <div><p class="small-label">Timeline</p><h2>What to do today</h2></div>
             <button id="resetToday" class="ghost danger">Reset today</button>
           </div>
-          <div id="todayQuests" class="quest-list"></div>
+          <div id="timeline" class="timeline"></div>
+        </article>
+
+        <article class="card">
+          <p class="small-label">Today’s visible proofs</p>
+          <h2>Six quests, one queen</h2>
+          <div id="quests" class="quests"></div>
         </article>
 
         <div class="grid two">
-          <article class="card">
-            <p class="small-label">Today’s workout</p>
-            <h2 id="todayWorkoutName"></h2>
-            <p id="todayWorkoutPurpose" class="muted"></p>
-            <div id="todayWorkoutSteps" class="mini-list"></div>
-            <details>
-              <summary>Low-energy swap</summary>
-              <p id="todayWorkoutLow" class="muted"></p>
-            </details>
-            <button id="markWorkout" class="primary">Mark workout complete</button>
+          <article class="card workout-today">
+            <p class="small-label">Today’s body protocol</p>
+            <h2 id="workoutName"></h2>
+            <p id="workoutIntent" class="muted"></p>
+            <div id="workoutSteps" class="mini"></div>
+            <details><summary>Low-energy version</summary><p id="workoutLow" class="muted"></p></details>
+            <div class="quickrow"><button id="startWorkoutTimer" class="ghost">30s timer</button><button id="markWorkout" class="primary">Mark complete</button></div>
           </article>
           <article class="card">
-            <p class="small-label">Armor + meal</p>
-            <h2 id="todayVibe"></h2>
-            <p id="todayArmor" class="muted"></p>
-            <p id="todayMeal" class="muted"></p>
-            <button id="openWardrobeFromToday" class="ghost">Open wardrobe planner</button>
+            <p class="small-label">Armor + nourishment</p>
+            <h2 id="armorTitle"></h2>
+            <p id="armorText" class="muted"></p>
+            <p id="mealText" class="muted"></p>
+            <button id="planOutfitToday" class="ghost">Plan today’s outfit</button>
           </article>
         </div>
       </section>
 
-      <section id="training" class="panel">
+      <section id="rituals" class="panel">
         <article class="card">
-          <p class="small-label">4-week no-equipment plan</p>
-          <h2>Actual daily training</h2>
-          <p class="muted">Designed to hit the adult baseline of weekly cardio plus 2+ strength days, while staying realistic. Start soft; consistency is the crown.</p>
-          <div class="week-controls">
-            <button class="ghost weekBtn" data-week="1">Week 1</button>
-            <button class="ghost weekBtn" data-week="2">Week 2</button>
-            <button class="ghost weekBtn" data-week="3">Week 3</button>
-            <button class="ghost weekBtn" data-week="4">Week 4</button>
-          </div>
-          <div id="trainingWeek" class="training-grid"></div>
+          <p class="small-label">Daily rhythm</p><h2>Your ritual ladder</h2>
+          <p class="muted">This is the “default day.” Edit times in Settings. The app has local notifications when allowed, and the calendar backup is safer for exact alarms.</p>
+          <div id="ritualList" class="ritual-list"></div>
         </article>
-
-        <article class="card">
-          <p class="small-label">Exercise timer</p>
-          <h2 id="timerTitle">Training room</h2>
-          <p id="timerStep" class="timer-step">Pick a workout and start.</p>
-          <div class="timer-display" id="timerDisplay">00:00</div>
-          <div class="button-row">
-            <button id="startTimer" class="primary">Start 30s timer</button>
-            <button id="stopTimer" class="ghost danger">Stop</button>
-          </div>
-        </article>
-      </section>
-
-      <section id="wardrobe" class="panel">
         <div class="grid two">
-          <article class="card">
-            <p class="small-label">Closet capture</p>
-            <h2>Add clothes from photos</h2>
-            <p class="muted">Take a picture or import one. Photos stay in this app’s local browser storage unless you export them yourself.</p>
-            <input id="clothingPhoto" type="file" accept="image/*" capture="environment" />
-            <label>Name<input id="clothingName" placeholder="Black boots, cream sweater..." /></label>
-            <div class="grid two tiny-gap">
-              <label>Category<select id="clothingCategory"><option>Top</option><option>Bottom</option><option>Dress</option><option>Outerwear</option><option>Shoes</option><option>Accessory</option><option>Bag</option></select></label>
-              <label>Vibe<select id="clothingVibe"><option>Aelin</option><option>Feyre</option><option>Poppy</option><option>Jude</option><option>Academic</option><option>Cozy</option><option>Dark Fae</option><option>Soft Court</option></select></label>
-            </div>
-            <label>Tags<input id="clothingTags" placeholder="black, gold, winter, date, class" /></label>
-            <button id="saveClothing" class="primary">Add to closet</button>
-          </article>
-
-          <article class="card">
-            <p class="small-label">Outfit oracle</p>
-            <h2>Build by vibe + weather</h2>
-            <div class="grid two tiny-gap">
-              <label>Vibe<select id="outfitVibe"><option>Aelin</option><option>Feyre</option><option>Poppy</option><option>Jude</option><option>Academic</option><option>Cozy</option><option>Dark Fae</option><option>Soft Court</option></select></label>
-              <label>Weather<select id="weatherMode"><option value="manual">Manual</option><option value="auto">Use location</option></select></label>
-            </div>
-            <label>Temperature / context<input id="manualWeather" placeholder="cold rain, 18°C class, date night..." /></label>
-            <div class="button-row">
-              <button id="getWeather" class="ghost">Fetch weather</button>
-              <button id="buildOutfit" class="primary">Arrange outfit</button>
-            </div>
-            <p id="weatherResult" class="muted"></p>
-            <div id="outfitResult" class="outfit-result"></div>
-          </article>
+          <article class="card"><p class="small-label">Morning ritual</p><h2>Fireheart opening</h2><ol id="morningList"></ol></article>
+          <article class="card"><p class="small-label">Night ritual</p><h2>Night Court closing</h2><ol id="nightList"></ol></article>
         </div>
-
-        <article class="card">
-          <div class="section-heading">
-            <div><p class="small-label">Your closet</p><h2>Pieces by vibe</h2></div>
-            <button id="exportWardrobe" class="ghost">Export closet backup</button>
-          </div>
-          <div id="closetGrid" class="closet-grid"></div>
-        </article>
+        <article class="card"><p class="small-label">Bad day ritual</p><h2>Minimum day mode</h2><div id="minimumList" class="mini"></div></article>
       </section>
 
-      <section id="learn" class="panel smart-scroll-panel">
-        <article class="card smart-console">
-          <div class="section-heading">
-            <div>
-              <p class="small-label">Smart scroller</p>
-              <h2>Real infinite knowledge feed</h2>
-              <p class="muted">Scroll like social media, but every card gives you something useful: GitHub repos, studies, public-domain books, tech discoveries, wiki knowledge, videos, AI cards, and offline micro-lessons.</p>
-            </div>
-            <button id="toggleFeedFocus" class="ghost">Focus feed</button>
-          </div>
-          <div class="smart-controls">
-            <label>Mode
-              <select id="smartSource">
-                <option value="auto">Auto Universe mix</option>
-                <option value="universe">Random knowledge universe</option>
-                <option value="github">New/useful GitHub repos</option>
-                <option value="studies">Research studies mix</option>
-                <option value="openalex">OpenAlex papers</option>
-                <option value="crossref">Crossref scholarly metadata</option>
-                <option value="europepmc">Europe PMC life-science papers</option>
-                <option value="arxiv">arXiv preprints</option>
-                <option value="gutenberg">Old/public-domain books</option>
-                <option value="hn">Hacker News discoveries</option>
-                <option value="stackexchange">StackExchange answers</option>
-                <option value="wiki">Wikipedia / Wikimedia</option>
-                <option value="openlibrary">Open Library</option>
-                <option value="googlebooks">Google Books API</option>
-                <option value="guardian">Guardian Books API</option>
-                <option value="youtube">YouTube learning videos</option>
-                <option value="gemini">Gemini AI oracle</option>
-                <option value="offline">Offline infinite</option>
-              </select>
-            </label>
-            <label>Topic / desire
-              <input id="smartTopic" value="data science, ai agents, productivity, psychology, old books, style, romantasy" />
-            </label>
-          </div>
-          <div id="onlineSourceStatus" class="notice mini-notice">Auto Universe: scroll down and the app loads more cards automatically.</div>
-          <div class="button-row feed-actions">
-            <button id="newLearnCard" class="primary">Add 1 card</button>
-            <button id="loadMoreLearn" class="primary">Load 10 cards</button>
-            <button id="surpriseLearning" class="ghost">Surprise topic</button>
-            <button id="focusLatestCard" class="ghost">Jump latest</button>
-            <button id="toggleSmartAutoload" class="ghost">Auto-load on</button>
-            <button id="clearLearnFeed" class="ghost danger">Clear feed</button>
-          </div>
-          <details>
-            <summary>What does “everything” include?</summary>
-            <ul class="reset-list compact-list">
-              <li><strong>Build:</strong> interesting GitHub repos and developer answers.</li>
-              <li><strong>Study:</strong> papers from OpenAlex, Crossref, Europe PMC, and arXiv.</li>
-              <li><strong>Read:</strong> public-domain classics and library/book metadata.</li>
-              <li><strong>Know:</strong> Wikipedia/Wikimedia, Hacker News, videos, and offline micro-lessons.</li>
-              <li><strong>Act:</strong> every card ends with a tiny quest so it becomes life, not doomscrolling.</li>
-            </ul>
-          </details>
-        </article>
-
-        <div id="learnFeed" class="learn-feed" aria-live="polite"></div>
-        <div id="learnFeedSentinel" class="feed-sentinel">
-          <span>Loading more knowledge gates…</span>
-        </div>
-
+      <section id="body" class="panel">
         <article class="card">
-          <p class="small-label">Free learning portals</p>
-          <h2>Open a gate</h2>
-          <div id="learningLinks" class="link-grid"></div>
+          <div class="section-title"><div><p class="small-label">8-week training path</p><h2>Actual workouts, not vague motivation</h2></div><select id="weekSelect"></select></div>
+          <p class="muted">No equipment required. Stop for sharp pain, dizziness, or anything that feels unsafe. Low-energy versions count.</p>
+          <div id="weekPlan" class="training-grid"></div>
         </article>
-        <article class="card">
-          <p class="small-label">Saved cards</p>
-          <div id="savedLearnCards" class="history"></div>
-        </article>
-      </section>
-
-      <section id="agents" class="panel">
-        <article class="card">
-          <p class="small-label">Inner court agents</p>
-          <h2>Rule-based now, ChatGPT-ready when you want depth</h2>
-          <p class="muted">Choose an agent, describe the situation, then copy the prompt into ChatGPT. No API key needed.</p>
-          <label>Situation<textarea id="agentSituation" placeholder="I’m avoiding studying / I need an outfit / I’m spiraling / I want a reading plan..."></textarea></label>
-          <div class="agent-grid" id="agentGrid"></div>
-          <textarea id="agentPrompt" readonly placeholder="Your generated prompt appears here."></textarea>
-          <div class="button-row">
-            <button id="copyAgentPrompt" class="primary">Copy prompt</button>
-            <button id="saveAgentNote" class="ghost">Save as note</button>
-          </div>
-        </article>
-      </section>
-
-      <section id="radar" class="panel">
         <div class="grid two">
-          <article class="card">
-            <p class="small-label">Romantasy book radar</p>
-            <h2>Discover + track</h2>
-            <p class="muted">Search Open Library, save finds to your TBR, and use the quick links for latest news/release browsing.</p>
-            <label>Search books<input id="bookQuery" value="romantasy" /></label>
-            <button id="searchBooks" class="primary">Search books</button>
-            <div id="bookResults" class="book-results"></div>
-          </article>
-          <article class="card">
-            <p class="small-label">Radar links</p>
-            <h2>Latest-ish gates</h2>
-            <div id="radarLinks" class="link-grid"></div>
-          </article>
+          <article class="card"><p class="small-label">Exercise library</p><h2>Form cues</h2><div id="exerciseLibrary" class="accordion"></div></article>
+          <article class="card"><p class="small-label">Timer</p><h2 id="timerLabel">Training room</h2><div id="timer" class="timer">00:00</div><div class="quickrow"><button data-secs="30" class="timerBtn primary">30s</button><button data-secs="45" class="timerBtn ghost">45s</button><button data-secs="60" class="timerBtn ghost">60s</button><button id="stopTimer" class="ghost danger">Stop</button></div></article>
         </div>
-        <article class="card">
-          <p class="small-label">Your TBR</p>
-          <div id="tbrList" class="history"></div>
-        </article>
+      </section>
+
+      <section id="meals" class="panel">
+        <article class="card"><p class="small-label">Nourishment, not punishment</p><h2>Court meal builder</h2><p class="muted">Pick 1 protein + 1 fiber/carb + 1 color + 1 fat/flavor + water. This is a structure, not a diet.</p><div id="mealBuilder" class="meal-grid"></div><button id="randomMeal" class="primary">Give me an easy meal</button><p id="mealIdea" class="callout"></p></article>
+        <div class="grid two">
+          <article class="card"><p class="small-label">Emergency meals</p><h2>When you have no energy</h2><div id="emergencyMeals" class="mini"></div></article>
+          <article class="card"><p class="small-label">Grocery spell</p><h2>Cheap staples</h2><div id="groceryList" class="mini"></div><button id="copyGrocery" class="ghost">Copy grocery list</button></article>
+        </div>
       </section>
 
       <section id="mind" class="panel">
-        <article class="card emergency" id="emergencyResetCard">
-          <p class="small-label">Emergency reset</p>
-          <h2>When the shadows get loud</h2>
-          <p>This is not therapy. It is a grounding script for the next ten minutes.</p>
-          <ol class="reset-list">
-            <li>Name five things you can see.</li>
-            <li>Drink water or rinse your hands.</li>
-            <li>Put both feet on the floor. Exhale longer than you inhale.</li>
-            <li>Message one safe person: “Can you talk for a minute?”</li>
-            <li>Do one tiny visible thing: trash, bed, curtains, teeth.</li>
-          </ol>
-          <details>
-            <summary>France support</summary>
-            <p>If you feel at immediate risk of harming yourself, call <strong>3114</strong>, the French national suicide prevention helpline, free and available 24/7.</p>
-          </details>
-        </article>
-        <article class="card">
-          <p class="small-label">Thought alchemy</p>
-          <h2>Turn the spiral into strategy</h2>
-          <label>What happened factually?<textarea id="fact"></textarea></label>
-          <label>What story is my mind telling?<textarea id="story"></textarea></label>
-          <label>What is a kinder, truer version?<textarea id="kindTruth"></textarea></label>
-          <label>What is the next queen action?<textarea id="nextAction"></textarea></label>
-          <button id="saveAlchemy" class="primary">Save reset</button>
-          <div id="alchemyHistory" class="history"></div>
-        </article>
+        <article class="card" id="emergencyCard"><p class="small-label">Emergency reset</p><h2>When your brain becomes a battlefield</h2><div id="resetSteps" class="mini"></div><button id="copyReset" class="ghost">Copy reset script</button></article>
+        <div class="grid two">
+          <article class="card"><p class="small-label">Thought alchemy</p><h2>Turn spiral into strategy</h2><label>Situation<textarea id="sit"></textarea></label><label>Story my mind tells<textarea id="story"></textarea></label><label>Evidence / kinder truth<textarea id="truth"></textarea></label><label>Queen action<textarea id="action"></textarea></label><button id="saveThought" class="primary">Save thought reset</button></article>
+          <article class="card"><p class="small-label">Nervous system menu</p><h2>Choose by state</h2><div id="stateMenu" class="mini"></div></article>
+        </div>
+      </section>
+
+      <section id="style" class="panel">
+        <div class="grid two">
+          <article class="card"><p class="small-label">Closet capture</p><h2>Import outfit / clothes photos</h2><input id="photo" type="file" accept="image/*" capture="environment"><label>Name<input id="itemName" placeholder="black boots, cream sweater..."></label><label>Category<select id="itemCat"><option>Top</option><option>Bottom</option><option>Dress</option><option>Outerwear</option><option>Shoes</option><option>Accessory</option><option>Bag</option><option>Full outfit</option></select></label><label>Vibe<select id="itemVibe"><option>Aelin</option><option>Feyre</option><option>Poppy</option><option>Jude</option><option>Academic</option><option>Cozy</option><option>Dark Fae</option><option>Soft Court</option></select></label><label>Tags<input id="itemTags" placeholder="rain, class, date, black, gold"></label><button id="saveItem" class="primary">Add to closet</button></article>
+          <article class="card"><p class="small-label">Outfit oracle</p><h2>Arrange by vibe</h2><label>Vibe<select id="oracleVibe"><option>Aelin</option><option>Feyre</option><option>Poppy</option><option>Jude</option><option>Academic</option><option>Cozy</option><option>Dark Fae</option><option>Soft Court</option></select></label><label>Context<input id="oracleContext" placeholder="class, internship, date, rainy cold..."></label><button id="buildOutfit" class="primary">Build outfit</button><div id="outfitResult" class="outfit"></div></article>
+        </div>
+        <article class="card"><div class="section-title"><div><p class="small-label">Closet</p><h2>Your saved pieces</h2></div><button id="exportCloset" class="ghost">Export closet</button></div><div id="closet" class="closet"></div></article>
+        <article class="card"><p class="small-label">Style doctrine</p><h2>Vibe formulas</h2><div id="vibeFormulas" class="training-grid"></div></article>
+      </section>
+
+      <section id="realm" class="panel">
+        <article class="card"><p class="small-label">Realm care</p><h2>Room, study, money, admin</h2><p class="muted">Life feels more magical when the boring systems stop attacking you.</p><div id="realmQuests" class="training-grid"></div></article>
+        <div class="grid two">
+          <article class="card"><p class="small-label">Study/work sprint</p><h2>Jude focus block</h2><label>Main task<input id="sprintTask" placeholder="open report, revise chapter, send email..."></label><label>First tiny move<input id="sprintMove" placeholder="open laptop + title document"></label><button id="startSprint" class="primary">Start 25-min sprint</button><p id="sprintStatus" class="callout"></p></article>
+          <article class="card"><p class="small-label">Money check</p><h2>5-minute finance ritual</h2><div id="moneySteps" class="mini"></div></article>
+        </div>
+      </section>
+
+      <section id="review" class="panel">
+        <div class="grid two"><article class="card"><p class="small-label">Stats</p><h2>Your proof archive</h2><div id="stats" class="mini"></div></article><article class="card"><p class="small-label">Weekly review</p><h2>Coronation notes</h2><label>What worked?<textarea id="worked"></textarea></label><label>What drained me?<textarea id="drained"></textarea></label><label>What will I simplify?<textarea id="simplify"></textarea></label><button id="saveReview" class="primary">Save review</button></article></div>
+        <article class="card"><p class="small-label">Saved reflections</p><h2>Archive</h2><div id="archive" class="mini"></div></article>
       </section>
 
       <section id="settings" class="panel">
-        <article class="card">
-          <p class="small-label">Samsung notification setup</p>
-          <h2>Reminders that actually help</h2>
-          <p class="muted">App notifications work best after the app is installed and recently opened. For exact daily alarms, import the calendar backup too.</p>
-          <div class="button-row">
-            <button id="enableNotifications" class="primary">Enable app notifications</button>
-            <button id="testNotification" class="ghost">Test</button>
-            <button id="downloadICS" class="ghost">Download calendar backup</button>
-          </div>
-          <div id="reminderEditor"></div>
-          <p id="notificationStatus" class="notice"></p>
-        </article>
-        <article class="card">
-          <p class="small-label">Data + reset</p>
-          <h2>Your local save file</h2>
-          <div class="button-row">
-            <button id="exportData" class="ghost">Export progress JSON</button>
-            <button id="importDataBtn" class="ghost">Import progress JSON</button>
-            <button id="hardReset" class="ghost danger">Reset app data</button>
-          </div>
-          <input id="importDataFile" type="file" accept="application/json" class="hidden" />
-        </article>
-        <article class="card">
-          <p class="small-label">API Vault</p>
-          <h2>Optional free keys for richer Smart Scroll</h2>
-          <p class="muted">Keys are stored only in this browser’s local storage on your phone. Do not paste paid/secret keys into a shared public device.</p>
-          <div class="grid two tiny-gap api-grid">
-            <label>Gemini API key<input id="geminiKey" type="password" placeholder="AI-generated personalized cards" /></label>
-            <label>GitHub token optional<input id="githubKey" type="password" placeholder="Higher GitHub API limits" /></label>
-            <label>OpenAlex API key optional<input id="openAlexKey" type="password" placeholder="Scholarly API key if you get one" /></label>
-            <label>Guardian API key<input id="guardianKey" type="password" placeholder="Books/fantasy news cards" /></label>
-            <label>YouTube Data API key<input id="youtubeKey" type="password" placeholder="Learning video cards" /></label>
-            <label>Google Books API key<input id="googleBooksKey" type="password" placeholder="Richer book discovery" /></label>
-          </div>
-          <div class="button-row">
-            <button id="saveApiKeys" class="primary">Save keys</button>
-            <button id="clearApiKeys" class="ghost danger">Clear keys</button>
-          </div>
-          <details>
-            <summary>Which keys are worth getting?</summary>
-            <ul class="reset-list compact-list">
-              <li><strong>Gemini:</strong> best for truly personalized smart cards.</li>
-              <li><strong>GitHub token:</strong> optional; helps avoid low unauthenticated limits while searching public repos.</li>
-              <li><strong>OpenAlex:</strong> optional; scholarly papers also try to work without a key.</li>
-              <li><strong>Guardian:</strong> good for book/fantasy culture news.</li>
-              <li><strong>YouTube:</strong> good for learning-video discovery, but search uses quota.</li>
-              <li><strong>Google Books:</strong> good for book metadata and recommendations.</li>
-            </ul>
-          </details>
-          <p id="apiStatus" class="notice mini-notice"></p>
-        </article>
-
-        <article class="card">
-          <p class="small-label">Installation</p>
-          <h2>Samsung setup</h2>
-          <ol class="reset-list">
-            <li>Host the folder on a free static host such as Netlify Drop or GitHub Pages.</li>
-            <li>Open the link in Chrome or Samsung Internet.</li>
-            <li>Tap menu → Install app / Add page to Home screen.</li>
-            <li>Open from your Home Screen, enable notifications, and import the calendar backup.</li>
-          </ol>
-        </article>
+        <article class="card"><p class="small-label">Customize</p><h2>Your routine times</h2><div id="settingsRituals" class="settings-grid"></div><button id="saveSettings" class="primary">Save times</button></article>
+        <div class="grid two"><article class="card"><p class="small-label">Notifications</p><h2>Samsung reminders</h2><p class="muted">App notifications work when your browser allows them. Calendar import is the reliable backup.</p><button id="enableNotifications" class="primary">Enable app notifications</button><button id="testNotification" class="ghost">Test notification</button><a class="buttonlink" href="queen_os_lifestyle_calendar_backup.ics" download>Download calendar backup</a></article><article class="card"><p class="small-label">Data</p><h2>Backup / reset</h2><button id="exportData" class="ghost">Export app data</button><input id="importFile" type="file" accept="application/json" class="hidden"><button id="importData" class="ghost">Import app data</button><button id="resetAll" class="ghost danger">Hard reset</button></article></div>
+        <article class="card"><p class="small-label">Separation plan</p><h2>Lifestyle app vs Knowledge Scroll</h2><p class="muted">This app stays ritual-focused. The Smart Scroll should be a separate app so it can be full-screen, infinite, noisy, and curiosity-driven without distracting your daily life command center.</p></article>
       </section>
     </main>
   </div>
-
-  <template id="questTemplate">
-    <label class="quest-card">
-      <input type="checkbox" />
-      <span class="quest-icon"></span>
-      <span><strong class="quest-title"></strong><em class="quest-detail"></em></span>
-    </label>
-  </template>
-
+  <template id="questTemplate"><label class="quest"><input type="checkbox"><span class="quest-body"><strong></strong><small></small></span></label></template>
   <script src="app.js"></script>
 </body>
 </html>

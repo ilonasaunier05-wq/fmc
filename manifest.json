@@ -1,25 +1,21 @@
 {
-  "name": "Romantasy Queen OS V6",
-  "short_name": "Queen OS",
-  "description": "Daily quests, workouts, wardrobe planner, real full-screen infinite knowledge feed and romantasy lifestyle system.",
+  "name": "Queen OS Lifestyle V7",
+  "short_name": "Queen OS Life",
   "start_url": "./index.html",
-  "scope": "./",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#120816",
-  "theme_color": "#3b1b4f",
+  "background_color": "#170f1f",
+  "theme_color": "#3d2455",
+  "description": "A romantasy-inspired Samsung lifestyle command center: routines, workouts, wardrobe, meals, mind resets, and calendar reminders.",
   "icons": [
     {
       "src": "assets/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "assets/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ]
 }

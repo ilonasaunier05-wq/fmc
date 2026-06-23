@@ -1,172 +1,495 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#3d2455" />
-  <meta name="description" content="Queen OS Lifestyle V7: a romantasy-inspired life command center for Samsung." />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="assets/icon-192.png" />
-  <link rel="stylesheet" href="styles.css" />
-  <title>Queen OS Lifestyle V7</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#7d3cff">
+  <link rel="manifest" href="manifest.json">
+  <title>Queen OS Lifestyle</title>
+  <style>
+    :root{
+      --bg:#120b14; --bg2:#1d1121; --card:#26162b; --card2:#331d39; --line:#4a2a52;
+      --text:#fff7ef; --muted:#cdbdd0; --soft:#9f8da8; --gold:#f0c86a; --rose:#f1a6b8;
+      --violet:#a67cff; --green:#8ed7b4; --danger:#ff8c9d; --blue:#9bd1ff;
+      --shadow:0 18px 55px rgba(0,0,0,.35); --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:radial-gradient(circle at 18% 0%,#3b1d4b 0,#120b14 38%,#0b0710 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.4;min-height:100vh;padding-bottom:92px}
+    body.focus{background:#100811}
+    button,input,textarea,select{font:inherit}
+    button{border:0;border-radius:18px;background:linear-gradient(135deg,#7d3cff,#b85cff);color:white;padding:12px 14px;font-weight:750;box-shadow:0 8px 20px rgba(125,60,255,.18);cursor:pointer}
+    button.secondary{background:#35213c;color:var(--text);border:1px solid var(--line);box-shadow:none}
+    button.ghost{background:transparent;border:1px solid var(--line);box-shadow:none;color:var(--muted)}
+    button.good{background:linear-gradient(135deg,#276f55,#52b88c)}
+    button.bad{background:linear-gradient(135deg,#873347,#ff7491)}
+    button.small{padding:8px 10px;border-radius:13px;font-size:.9rem}
+    input,textarea,select{width:100%;border:1px solid var(--line);background:#180d1c;color:var(--text);border-radius:16px;padding:12px;outline:none}
+    textarea{min-height:92px;resize:vertical}
+    label{display:block;color:var(--muted);font-size:.92rem;margin:12px 0 6px}
+    a{color:#d9c4ff}
+    .app{max-width:1120px;margin:0 auto;padding:18px 14px 50px}
+    .hero{position:relative;overflow:hidden;border:1px solid rgba(240,200,106,.25);border-radius:30px;padding:24px;background:linear-gradient(140deg,rgba(56,27,66,.96),rgba(26,13,31,.96));box-shadow:var(--shadow);margin-bottom:16px}
+    .hero:after{content:"";position:absolute;right:-90px;top:-80px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(240,200,106,.28),rgba(166,124,255,.14),transparent 70%)}
+    .hero h1{font-family:Georgia,serif;font-size:clamp(2rem,8vw,4.6rem);line-height:.9;margin:0 0 10px;letter-spacing:-.04em}
+    .subtitle{color:var(--muted);max-width:760px;font-size:1.04rem}
+    .toprow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;position:relative;z-index:1}
+    .pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .pill{border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--muted);padding:8px 11px;border-radius:999px;font-size:.9rem}
+    .pill.gold{color:#ffebbd;border-color:rgba(240,200,106,.4);background:rgba(240,200,106,.1)}
+    .tabs{position:sticky;top:0;z-index:50;background:linear-gradient(to bottom,rgba(18,11,20,.98),rgba(18,11,20,.85));backdrop-filter:blur(16px);padding:9px 0;margin:0 -6px 12px;display:flex;gap:8px;overflow:auto;border-bottom:1px solid rgba(255,255,255,.06)}
+    .tabs button{white-space:nowrap;background:#26162b;border:1px solid var(--line);box-shadow:none;padding:10px 12px;color:var(--muted)}
+    .tabs button.active{background:linear-gradient(135deg,#7d3cff,#b85cff);color:white;border-color:transparent}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+    .card{grid-column:span 12;background:linear-gradient(180deg,rgba(43,24,50,.98),rgba(30,17,35,.98));border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:0 10px 35px rgba(0,0,0,.20)}
+    .card.flat{box-shadow:none;background:#211326}
+    .card h2,.card h3{font-family:Georgia,serif;margin:0 0 9px;letter-spacing:-.02em}
+    .card h2{font-size:1.65rem}.card h3{font-size:1.25rem}
+    .muted{color:var(--muted)}.soft{color:var(--soft)}.gold{color:var(--gold)}.rose{color:var(--rose)}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .between{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    .section{display:none;animation:fade .25s ease}.section.active{display:block}
+    @keyframes fade{from{opacity:.45;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+    .quest{display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.035);margin:8px 0}
+    .quest input[type=checkbox]{width:auto;margin-top:4px;accent-color:#a67cff}
+    .quest.done{opacity:.62;text-decoration:line-through}
+    .timeline{position:relative;margin-top:10px}
+    .timeblock{display:grid;grid-template-columns:70px 1fr;gap:10px;padding:10px;border-radius:18px;border:1px solid transparent;margin:8px 0;background:rgba(255,255,255,.03)}
+    .timeblock.now{border-color:rgba(240,200,106,.55);background:rgba(240,200,106,.09)}
+    .time{font-weight:900;color:var(--gold)}
+    .badge{font-size:.8rem;padding:5px 8px;border-radius:999px;border:1px solid var(--line);background:#1b0f20;color:var(--muted);display:inline-flex;align-items:center;gap:5px}
+    .bigNow{border:1px solid rgba(240,200,106,.45);background:linear-gradient(135deg,rgba(240,200,106,.13),rgba(166,124,255,.13));border-radius:24px;padding:16px;margin:8px 0}
+    .bigNow h2{font-size:2rem;margin-bottom:6px}.bigNow .action{font-size:1.1rem;font-weight:800}
+    .meter{height:12px;border-radius:99px;background:#120b14;overflow:hidden;border:1px solid var(--line)}
+    .meter span{display:block;height:100%;background:linear-gradient(90deg,#7d3cff,#f0c86a);width:0%}
+    .stat{background:#1a0f1e;border:1px solid var(--line);border-radius:18px;padding:12px;min-width:110px;flex:1}
+    .stat b{display:block;font-size:1.4rem;color:var(--gold)}
+    .quote{font-family:Georgia,serif;font-size:1.3rem;color:#ffe8bc;border-left:3px solid var(--gold);padding-left:12px;margin:10px 0}
+    .mini{font-size:.88rem;color:var(--muted)}
+    .list{margin:8px 0 0;padding-left:19px}.list li{margin:6px 0}
+    .split{display:grid;grid-template-columns:1fr;gap:12px}
+    .menuCard{border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:20px;padding:14px;margin:10px 0}
+    .menuCard strong{color:#ffe7b5}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.chip{border:1px solid var(--line);border-radius:999px;padding:7px 10px;color:var(--muted);background:#1a0f1e;font-size:.88rem}.chip.active{background:#7d3cff;color:white;border-color:#7d3cff}
+    .outfitGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:10px}
+    .piece{border:1px solid var(--line);background:#1a0f1e;border-radius:18px;overflow:hidden}.piece img{width:100%;height:130px;object-fit:cover;background:#0d0710}.piece .p{padding:10px}.piece .name{font-weight:800}.piece button{width:100%;margin-top:7px}
+    .bottomNav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(14,8,17,.92);backdrop-filter:blur(18px);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px env(safe-area-inset-bottom)}
+    .bottomNav button{background:transparent;color:var(--muted);box-shadow:none;border-radius:16px;padding:8px 8px;font-size:.78rem;display:flex;flex-direction:column;gap:2px;align-items:center;min-width:54px}.bottomNav button.active{color:white;background:#2d1934}
+    .icon{font-size:1.1rem}.dangerBox{border-color:rgba(255,140,157,.45);background:rgba(255,140,157,.08)}
+    .printable{background:white;color:#111;border-radius:20px;padding:16px}.printable *{color:#111!important}
+    .hidden{display:none!important}
+    @media(min-width:760px){
+      body{padding-bottom:0}.bottomNav{display:none}.app{padding:24px}.card.half{grid-column:span 6}.card.third{grid-column:span 4}.card.twothird{grid-column:span 8}.split{grid-template-columns:1fr 1fr}.tabs{border-radius:20px;padding:10px;margin-bottom:16px}.tabs button{padding:12px 16px}.timeblock{grid-template-columns:92px 1fr}.hero{padding:32px}
+    }
+  </style>
 </head>
 <body>
-  <div id="toast" class="toast"></div>
-  <div class="shell">
-    <header class="hero">
-      <div class="topline">
-        <div>
-          <p class="eyebrow">Separated app · Lifestyle Court OS V7</p>
-          <h1>Queen OS Lifestyle</h1>
-          <p class="subtitle">Your daily command center for body, mind, space, style, meals, routines, and becoming her.</p>
-        </div>
-        <button id="installBtn" class="ghost hidden">Install</button>
+<div class="app">
+  <header class="hero">
+    <div class="toprow">
+      <div>
+        <h1>Queen OS<br>Lifestyle</h1>
+        <p class="subtitle">Your all-day main-character command center: body, mind, meals, outfits, room, study, beauty, books, and tiny useless-but-magical rituals. No knowledge feed. No Smart Scroll. Just your life.</p>
+        <div class="pills"><span class="pill gold">Aelin fire</span><span class="pill">Feyre softness</span><span class="pill">Poppy freedom</span><span class="pill">Jude strategy</span><span class="pill">French realistic meals</span></div>
       </div>
-      <article class="card glow">
-        <p class="small-label">Today’s court order</p>
-        <h2 id="briefTitle">Open the gates.</h2>
-        <p id="briefText" class="muted"></p>
-        <div class="quickrow">
-          <button id="minimumDay" class="ghost">Minimum day mode</button>
-          <button id="copyBrief" class="ghost">Copy briefing</button>
-          <button id="overwhelm" class="ghost danger">I’m overwhelmed</button>
-        </div>
-      </article>
-    </header>
+      <div class="stat" style="max-width:220px"><span class="mini">Today</span><b id="todayDate">—</b><span id="todayModeLabel" class="mini">normal mode</span></div>
+    </div>
+  </header>
 
-    <nav class="tabs" aria-label="sections">
-      <button class="tab active" data-tab="today">Today</button>
-      <button class="tab" data-tab="rituals">Rituals</button>
-      <button class="tab" data-tab="body">Body</button>
-      <button class="tab" data-tab="meals">Meals</button>
-      <button class="tab" data-tab="mind">Mind</button>
-      <button class="tab" data-tab="style">Style</button>
-      <button class="tab" data-tab="realm">Realm</button>
-      <button class="tab" data-tab="review">Review</button>
-      <button class="tab" data-tab="settings">Settings</button>
-    </nav>
+  <nav class="tabs" id="tabs"></nav>
 
-    <main>
-      <section id="today" class="panel active">
-        <div class="grid two">
-          <article class="card">
-            <p class="small-label">Day <span id="dayNum">1</span> · <span id="arcName">Foundation Arc</span></p>
-            <h2 id="todayTitle">Visible proof, not perfection</h2>
-            <div class="meter"><span id="progress"></span></div>
-            <p class="muted"><span id="xp">0</span> XP · streak <span id="streak">0</span> · level <span id="level">1</span></p>
-          </article>
-          <article class="card">
-            <p class="small-label">Mood + energy</p>
-            <div class="moodgrid" id="moodButtons"></div>
-            <textarea id="moodNote" placeholder="One honest sentence. Example: tired but willing."></textarea>
-            <button id="saveMood" class="primary">Save mood</button>
-          </article>
-        </div>
+  <main>
+    <section id="today" class="section active"></section>
+    <section id="body" class="section"></section>
+    <section id="meals" class="section"></section>
+    <section id="armor" class="section"></section>
+    <section id="mind" class="section"></section>
+    <section id="realm" class="section"></section>
+    <section id="books" class="section"></section>
+    <section id="settings" class="section"></section>
+  </main>
+</div>
+<nav class="bottomNav" id="bottomNav"></nav>
 
-        <article class="card">
-          <div class="section-title">
-            <div><p class="small-label">Timeline</p><h2>What to do today</h2></div>
-            <button id="resetToday" class="ghost danger">Reset today</button>
-          </div>
-          <div id="timeline" class="timeline"></div>
-        </article>
+<script>
+'use strict';
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+const todayKey = () => new Date().toISOString().slice(0,10);
+const store = {
+  get(k, fallback){ try{return JSON.parse(localStorage.getItem('qos_'+k)) ?? fallback}catch(e){return fallback}},
+  set(k,v){localStorage.setItem('qos_'+k, JSON.stringify(v))}
+};
+const defaultState = {
+  name:'Ilona', mode:'normal', xp:0, streak:0, lastDay:null, programStart:todayKey(),
+  prefs:{wake:'07:30', sleep:'23:00', country:'France', disliked:'peanut butter, too many vegetables', style:'romantasy main character', study:'data science / life admin', mealMode:'simple'},
+  mood:{weather:'unknown', energy:3}, savedQuotes:[], tbr:[], wardrobe:[], outfits:[], rituals:{}, checked:{}, notes:{}, meals:{}, quests:{}, remindersEnabled:false
+};
+let state = {...defaultState, ...store.get('state',{})};
+state.prefs = {...defaultState.prefs, ...(state.prefs||{})};
+function save(){store.set('state',state)}
+function addXP(n){state.xp=(state.xp||0)+n; save(); render()}
+function fmtDate(d=new Date()){return d.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'})}
+function clamp(n,a,b){return Math.max(a,Math.min(b,n))}
+function timeToMin(t){const [h,m]=t.split(':').map(Number);return h*60+m}
+function nowMin(){const d=new Date();return d.getHours()*60+d.getMinutes()}
+function dayIndex(){return new Date().getDay()} // 0 Sun
+function daysBetween(a,b){return Math.floor((new Date(b)-new Date(a))/(1000*60*60*24))}
+function weekNum(){return Math.floor(Math.max(0,daysBetween(state.programStart,todayKey()))/7)+1}
 
-        <article class="card">
-          <p class="small-label">Today’s visible proofs</p>
-          <h2>Six quests, one queen</h2>
-          <div id="quests" class="quests"></div>
-        </article>
+const tabs = [
+  ['today','Today','👑'],['body','Body','⚔️'],['meals','Meals','🍽️'],['armor','Armor','🖤'],['mind','Mind','🌙'],['realm','Realm','🏰'],['books','Books','📚'],['settings','Me','✨']
+];
+function navHTML(active='today'){
+  return tabs.map(([id,label,icon])=>`<button data-tab="${id}" class="${id===active?'active':''}"><span class="icon">${icon}</span>${label}</button>`).join('')
+}
+function bindNav(){
+  $('#tabs').innerHTML=navHTML(currentTab); $('#bottomNav').innerHTML=navHTML(currentTab);
+  $$('button[data-tab]').forEach(btn=>btn.onclick=()=>showTab(btn.dataset.tab));
+}
+let currentTab='today';
+function showTab(id){currentTab=id; $$('.section').forEach(s=>s.classList.remove('active')); $('#'+id).classList.add('active'); bindNav(); window.scrollTo({top:0,behavior:'smooth'}); renderSection(id)}
 
-        <div class="grid two">
-          <article class="card workout-today">
-            <p class="small-label">Today’s body protocol</p>
-            <h2 id="workoutName"></h2>
-            <p id="workoutIntent" class="muted"></p>
-            <div id="workoutSteps" class="mini"></div>
-            <details><summary>Low-energy version</summary><p id="workoutLow" class="muted"></p></details>
-            <div class="quickrow"><button id="startWorkoutTimer" class="ghost">30s timer</button><button id="markWorkout" class="primary">Mark complete</button></div>
-          </article>
-          <article class="card">
-            <p class="small-label">Armor + nourishment</p>
-            <h2 id="armorTitle"></h2>
-            <p id="armorText" class="muted"></p>
-            <p id="mealText" class="muted"></p>
-            <button id="planOutfitToday" class="ghost">Plan today’s outfit</button>
-          </article>
-        </div>
-      </section>
+const identity = {
+  Aelin:{title:'Aelin Fireheart',rule:'Do one brave visible thing before you negotiate with fear.',proof:'move your body, send the message, start the task'},
+  Feyre:{title:'Feyre Night Court',rule:'Make life beautiful enough that you want to stay inside it.',proof:'light, music, soft clothes, art, gentle reset'},
+  Poppy:{title:'Poppy Freedom',rule:'Ask what you actually want, then stop apologizing for needing it.',proof:'eat enough, choose curiosity, take up space'},
+  Jude:{title:'Jude Strategy',rule:'Power is built by doing the unromantic thing consistently.',proof:'plan, boundaries, admin, study, receipts'}
+};
+const timeline = [
+  {t:'07:30',chapter:'Rise like a queen',tag:'Aelin',normal:'Water. Curtains. Make bed badly but make it. Say the oath once.',low:'Water + curtains. Bed can simply be pulled up.',queen:'Water, curtains, bed, 5 deep breaths, one brave sentence aloud.'},
+  {t:'07:45',chapter:'Face + body boot sequence',tag:'Poppy',normal:'Bathroom, teeth, face splash/skincare, deodorant, comfy clothes.',low:'Teeth + deodorant. That is still dignity.',queen:'Full skincare, hair brushed, perfume/body mist, lip balm.'},
+  {t:'08:00',chapter:'First quest',tag:'Jude',normal:'Look at today. Pick 1 main quest, 1 body quest, 1 beauty/realm quest.',low:'Pick only one tiny quest.',queen:'Write the top 3 moves and block time for the hardest one.'},
+  {t:'08:20',chapter:'Breakfast court',tag:'Feyre',normal:'Simple breakfast: tartines, yogurt, cereal, eggs, or coffee + real food.',low:'Anything edible: yogurt, compote, biscuits + milk, banana, toast.',queen:'Protein + carbs + drink. Prepare a snack for later.'},
+  {t:'09:00',chapter:'Deep work / study gate',tag:'Jude',normal:'25 minutes on the important thing before wandering online.',low:'Open the file. Work for 5 minutes only.',queen:'2 x 45 min focus blocks, phone away.'},
+  {t:'12:30',chapter:'Lunch and sunlight',tag:'Poppy',normal:'Eat a real lunch and get 5 minutes of outside light or window air.',low:'Microwave/ready meal is allowed. Just eat.',queen:'Balanced plate + short walk after.'},
+  {t:'15:30',chapter:'Strategy check',tag:'Jude',normal:'Ask: what would make tonight easier? Do 10 minutes of it.',low:'Send one message or put one thing away.',queen:'Admin sprint: email, budget, school, laundry, planning.'},
+  {t:'17:30',chapter:'Training / movement',tag:'Aelin',normal:'Do today’s workout, walk, stretch, or dance. Low impact is valid.',low:'5 minutes: stretch on bed or walk around the room.',queen:'Full workout + shower reset.'},
+  {t:'19:30',chapter:'Dinner court',tag:'Feyre',normal:'Simple dinner without drama. Pasta/omelette/rice/croque/bowl.',low:'Emergency meal. No guilt.',queen:'Cook once, save leftovers for tomorrow.'},
+  {t:'21:00',chapter:'Realm reset',tag:'Jude',normal:'10-minute room reset: trash, clothes, dishes, surfaces, tomorrow outfit.',low:'Only trash or only clothes.',queen:'Reset room + bag + outfit + calendar.'},
+  {t:'21:30',chapter:'Soft court hour',tag:'Feyre',normal:'Shower/skincare, candles/music, book, journal, comfort show.',low:'Lie down with a book or audio. No productivity needed.',queen:'Full wind-down ritual and phone away.'},
+  {t:'22:30',chapter:'Phone curfew',tag:'Jude',normal:'Put phone charging away from bed. Read 10 pages.',low:'Set phone face down. One page counts.',queen:'Sleep routine, alarm, 3 wins, lights out.'}
+];
+function currentBlock(){
+  const n=nowMin(); let cur=timeline[0];
+  for(const b of timeline){ if(timeToMin(b.t)<=n) cur=b; }
+  return cur;
+}
+function modeText(obj){return obj[state.mode]||obj.normal}
 
-      <section id="rituals" class="panel">
-        <article class="card">
-          <p class="small-label">Daily rhythm</p><h2>Your ritual ladder</h2>
-          <p class="muted">This is the “default day.” Edit times in Settings. The app has local notifications when allowed, and the calendar backup is safer for exact alarms.</p>
-          <div id="ritualList" class="ritual-list"></div>
-        </article>
-        <div class="grid two">
-          <article class="card"><p class="small-label">Morning ritual</p><h2>Fireheart opening</h2><ol id="morningList"></ol></article>
-          <article class="card"><p class="small-label">Night ritual</p><h2>Night Court closing</h2><ol id="nightList"></ol></article>
-        </div>
-        <article class="card"><p class="small-label">Bad day ritual</p><h2>Minimum day mode</h2><div id="minimumList" class="mini"></div></article>
-      </section>
+const workouts = {
+  1:{name:'Sunday — Jude Reset',vibe:'rest, plan, prepare',duration:'20–45 min',low:'5-min stretch + choose outfits',warm:['3 slow breaths','Neck circles x 5/side','Shoulder rolls x 10'],main:['No intense workout today. Take a 20–45 min walk if you want.','10 min mobility: cat-cow x 8, child pose 60s, hip circles x 8/side, hamstring stretch 45s/side.','Reset training space: put shoes/clothes ready for Monday.'],finisher:'Write your weekly battle plan: 3 priorities, 3 meals, 3 outfits.',quote:'A strategist rests before war.'},
+  2:{name:'Monday — Aelin Legs + Glutes',vibe:'fireheart strength',duration:'28–40 min',low:'1 round only: 10 squats, 10 glute bridges, 20s plank',warm:['March in place 60s','Hip circles x 8/side','Bodyweight good mornings x 10','Easy squats x 10'],main:['Squats — 3 x 10–12','Reverse lunges — 3 x 8/side','Glute bridges — 3 x 15','Calf raises — 2 x 18','Plank — 3 x 20–40s'],finisher:'5 min brisk walk, stairs, or dance. No jumping needed.',quote:'Fire is built rep by rep.'},
+  3:{name:'Tuesday — Feyre Walk + Mobility',vibe:'soft power',duration:'25–50 min',low:'10-min walk or stretch in pajamas',warm:['Put shoes on','One song while tidying','Gentle ankle circles'],main:['Walk 25–45 min. Outside if possible, hallway/room if not.','Mobility: world’s greatest stretch x 5/side','Chest opener 60s','Forward fold 60s','Dead bug — 2 x 8/side'],finisher:'Make one corner beautiful when you return.',quote:'Softness is not weakness; it is recovery.'},
+  4:{name:'Wednesday — Jude Upper Body + Core',vibe:'sharp discipline',duration:'28–40 min',low:'Wall push-ups 2 x 8 + backpack row 2 x 8',warm:['Arm circles x 10 each way','Wall slides x 10','Scapular squeezes x 12'],main:['Incline or knee push-ups — 3 x 6–10','Backpack rows — 3 x 10/side','Pike hold or shoulder taps — 3 x 20s','Dead bug — 3 x 8/side','Side plank — 2 x 15–30s/side'],finisher:'2-min posture reset: stand tall, shoulders down, chin level.',quote:'Power likes receipts.'},
+  5:{name:'Thursday — Poppy Adventure Cardio',vibe:'freedom and curiosity',duration:'20–45 min',low:'One-song dance or 8-min walk',warm:['Pick music','March 60s','Easy side steps 60s'],main:['Choose one: brisk walk, dance, bike, stairs, or low-impact cardio video.','Do 20–35 min at a pace where you can talk but feel alive.','Optional core: bird dog — 2 x 8/side, hollow hold — 2 x 15s'],finisher:'Write one thing you are curious about lately.',quote:'Your body is not an apology.'},
+  6:{name:'Friday — Fireheart Full Body Circuit',vibe:'training montage',duration:'30–42 min',low:'2 rounds, slow and clean',warm:['March 60s','Squat to reach x 8','Good mornings x 10','Arm swings x 20'],main:['3–5 rounds:','12 squats','8 push-ups or wall push-ups','12 backpack Romanian deadlifts','10 backpack rows/side','20 mountain climbers slow or step-backs','30s plank'],finisher:'Stretch hips and chest for 2 minutes.',quote:'You are allowed to become difficult to defeat.'},
+  7:{name:'Saturday — Main Character Walk + Optional Glow',vibe:'romantasy city scene',duration:'45–90 min',low:'15-min walk + shower',warm:['Charge headphones','Choose outfit armor','Take water'],main:['Long walk 45–90 min OR errands on foot OR dance cleaning session.','Optional: 10-min glute add-on: bridges 2 x 20, side-lying leg raises 2 x 15/side.','Optional: take one picture of something beautiful.'],finisher:'Everything shower, hair, nails, or outfit planning.',quote:'The world is a kingdom when you walk through it awake.'}
+};
+function todayWorkout(){return workouts[dayIndex()+1]}
+function progression(){
+  const w=weekNum();
+  if(w<=2)return {phase:'Weeks 1–2: Learn the moves',rule:'Do the listed sets. Stop with 2 reps left in the tank. Consistency > intensity.'};
+  if(w<=4)return {phase:'Weeks 3–4: Add volume',rule:'Add 1 set to the first two exercises OR add 2 reps per set.'};
+  if(w<=6)return {phase:'Weeks 5–6: Add control',rule:'Use 3-second lowering on squats, lunges, push-ups, and rows.'};
+  if(w<=8)return {phase:'Weeks 7–8: Harder version',rule:'Choose harder variations: lower incline push-ups, slower lunges, heavier backpack.'};
+  return {phase:'After Week 8: Repeat stronger',rule:'Restart at Week 1 with harder versions or add weights/resistance bands.'};
+}
+const mealBank = {
+ breakfast:[
+  {name:'Tartines françaises',items:'Baguette/toast + butter/jam/honey + café/thé + yogurt if hungry',why:'zero drama, very French, easy before class'},
+  {name:'Fromage blanc bowl',items:'Fromage blanc or yaourt grec + granola/cereal + banana or compote',why:'sweet, quick, more filling'},
+  {name:'Egg toast',items:'2 eggs + toast/baguette + cheese if wanted',why:'simple protein without vegetables'},
+  {name:'Cereal rescue',items:'Cereal + milk + fruit/compote on the side',why:'for mornings where cooking is impossible'},
+  {name:'Crêpe/pancake batch',items:'Make several, keep in fridge, eat with jam/sugar/Nutella',why:'romantic breakfast, realistic prep'}
+ ],
+ lunch:[
+  {name:'Pasta ham cheese',items:'Pasta + jambon + crème or fromage râpé + pepper',why:'student classic, filling, cheap'},
+  {name:'Croque-monsieur plate',items:'Bread + ham + cheese, pan/oven. Optional: tomato/cucumber side.',why:'French, fast, no peanut butter'},
+  {name:'Omelette baguette',items:'2–3 eggs + cheese/ham + baguette. Optional: cherry tomatoes.',why:'10 minutes, protein'},
+  {name:'Rice chicken cream',items:'Rice + chicken/turkey + crème fraîche + spices. Optional: frozen carrots/peas if okay.',why:'comfort meal, leftovers'},
+  {name:'Tuna pasta',items:'Pasta + tuna + crème/fromage frais + lemon/pepper',why:'pantry meal, cheap'},
+  {name:'Ravioli or gnocchi',items:'Store-bought ravioli/gnocchi + sauce + grated cheese',why:'low-energy hot meal'},
+  {name:'Wrap français',items:'Tortilla + ham/chicken + cheese + sauce. Optional lettuce or corn.',why:'portable, customizable'}
+ ],
+ dinner:[
+  {name:'Omelette night court',items:'Eggs + cheese + ham/mushrooms if tolerated + bread',why:'comfort and easy cleanup'},
+  {name:'Quiche shortcut',items:'Ready quiche or homemade quiche lorraine + yogurt/fruit',why:'French realistic dinner'},
+  {name:'Pasta pesto/cream',items:'Pasta + pesto or crème + parmesan + chicken/ham if wanted',why:'cozy and quick'},
+  {name:'Semoule sausage bowl',items:'Couscous/semoule + sausage/chicken + sauce. Optional tiny vegetables.',why:'fast, filling'},
+  {name:'Soup optional mode',items:'If you tolerate it: velouté + grilled cheese/croque',why:'stealth vegetables without salad energy'},
+  {name:'Freezer court',items:'Frozen pizza/nuggets/fish fingers + yogurt/fruit/compote',why:'emergency meal with no guilt'},
+  {name:'Potato plate',items:'Microwave potatoes or potatoes sautées + eggs/ham/cheese',why:'cheap, very comforting'}
+ ],
+ snack:[
+  {name:'French snack plate',items:'Yogurt/fromage blanc + biscuits + fruit/compote',why:'sweet but useful'},
+  {name:'Cheese toast',items:'Toast + cheese + ham if wanted',why:'savory and fast'},
+  {name:'Chocolate + milk',items:'Chocolate square/bar + milk or yogurt',why:'allowed; add protein if hungry'},
+  {name:'Bakery treat with strategy',items:'Pain au chocolat/croissant + drink + real meal later',why:'pleasure without pretending it is a full day plan'}
+ ]
+};
+const stealthVeg = ['tomato sauce','grated carrot hidden in sauce','cucumber slices','corn','frozen peas/carrots in rice','velouté with grilled cheese','fruit/compote counts as an easier start','pickles/cornichons if you like them'];
+const outfitVibes = {
+ Aelin:['black top','gold jewelry','boots/sneakers','sleek hair','red/brown lip tint','one sharp accessory'],
+ Feyre:['soft sweater','silver detail','blue/cream/grey','braid or loose hair','glowy skin','cozy scarf'],
+ Poppy:['white/ivory detail','corset-ish or structured top','pearls/ribbon','soft blush','comfortable shoes','romantic sleeve'],
+ Jude:['dark green/black','blazer or structured jacket','rings','belt','sharp shoes','clean nails','serious bag'],
+ Student:['jeans/trousers','clean top','cardigan/hoodie','hair clipped back','simple jewelry','comfortable shoes'],
+ LazyQueen:['matching comfy set','clean socks','hair tied nicely','lip balm','one perfume/body spray','warm layer']
+};
+const roomZones = [
+ {name:'Bed throne',steps:['Make bed or pull duvet flat','Remove cups/plates','Put sleep clothes where they belong','Add one cozy detail']},
+ {name:'Floor battlefield',steps:['Trash first','Clothes into laundry/chair/closet','Shoes lined up','Bag emptied']},
+ {name:'Desk war table',steps:['Clear surface','Keep only laptop/notebook/water','Write tomorrow top 3','Charge devices']},
+ {name:'Bathroom spell room',steps:['Sink wipe','Products back','Towels/hair removed','Refill basics']},
+ {name:'Laundry quest',steps:['Collect laundry','Start load or sort basket','Set timer/reminder','Fold only 10 items if overwhelmed']}
+];
+const scripts = [
+ 'I do not need to feel ready to begin.',
+ 'My life gets built in small visible actions.',
+ 'I can be soft and still have standards.',
+ 'No spiral gets to make my decisions for me.',
+ 'The queen action is the next useful thing, not the perfect thing.',
+ 'I am allowed to make my real life more beautiful.'
+];
 
-      <section id="body" class="panel">
-        <article class="card">
-          <div class="section-title"><div><p class="small-label">8-week training path</p><h2>Actual workouts, not vague motivation</h2></div><select id="weekSelect"></select></div>
-          <p class="muted">No equipment required. Stop for sharp pain, dizziness, or anything that feels unsafe. Low-energy versions count.</p>
-          <div id="weekPlan" class="training-grid"></div>
-        </article>
-        <div class="grid two">
-          <article class="card"><p class="small-label">Exercise library</p><h2>Form cues</h2><div id="exerciseLibrary" class="accordion"></div></article>
-          <article class="card"><p class="small-label">Timer</p><h2 id="timerLabel">Training room</h2><div id="timer" class="timer">00:00</div><div class="quickrow"><button data-secs="30" class="timerBtn primary">30s</button><button data-secs="45" class="timerBtn ghost">45s</button><button data-secs="60" class="timerBtn ghost">60s</button><button id="stopTimer" class="ghost danger">Stop</button></div></article>
-        </div>
-      </section>
+function completeQuest(id, xp=5){
+  const k=todayKey(); state.checked[k]=state.checked[k]||{}; state.checked[k][id]=!state.checked[k][id]; if(state.checked[k][id]) state.xp+=xp; save(); render();
+}
+function isChecked(id){return !!(state.checked[todayKey()]||{})[id]}
+function questHTML(id,text,xp=5){return `<label class="quest ${isChecked(id)?'done':''}"><input type="checkbox" ${isChecked(id)?'checked':''} onchange="completeQuest('${id}',${xp})"><span>${text}<br><span class="mini">+${xp} XP</span></span></label>`}
 
-      <section id="meals" class="panel">
-        <article class="card"><p class="small-label">Nourishment, not punishment</p><h2>Court meal builder</h2><p class="muted">Pick 1 protein + 1 fiber/carb + 1 color + 1 fat/flavor + water. This is a structure, not a diet.</p><div id="mealBuilder" class="meal-grid"></div><button id="randomMeal" class="primary">Give me an easy meal</button><p id="mealIdea" class="callout"></p></article>
-        <div class="grid two">
-          <article class="card"><p class="small-label">Emergency meals</p><h2>When you have no energy</h2><div id="emergencyMeals" class="mini"></div></article>
-          <article class="card"><p class="small-label">Grocery spell</p><h2>Cheap staples</h2><div id="groceryList" class="mini"></div><button id="copyGrocery" class="ghost">Copy grocery list</button></article>
-        </div>
-      </section>
+function renderToday(){
+  const cur=currentBlock(); const p=progression(); const w=todayWorkout(); const mode=state.mode;
+  const completeCount=Object.values(state.checked[todayKey()]||{}).filter(Boolean).length;
+  $('#today').innerHTML=`
+  <div class="grid">
+    <div class="card twothird">
+      <div class="between"><div><h2>What do I do now?</h2><p class="muted">All-day lifestyle mode. Not a feed. Not another place to scroll forever.</p></div><span class="badge">${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</span></div>
+      <div class="bigNow">
+        <span class="badge">${cur.t} · ${cur.tag}</span>
+        <h2>${cur.chapter}</h2>
+        <p class="action">${modeText(cur)}</p>
+        <div class="row"><button onclick="completeQuest('now_'+('${cur.t}').replace(':',''),8)">${isChecked('now_'+cur.t.replace(':',''))?'Completed':'Mark this scene done'} +8 XP</button><button class="secondary" onclick="showTab('mind')">I feel bad</button><button class="ghost" onclick="showTab('armor')">Need outfit</button></div>
+      </div>
+      <div class="row"><button class="${mode==='low'?'good':'secondary'}" onclick="setMode('low')">Minimum day</button><button class="${mode==='normal'?'good':'secondary'}" onclick="setMode('normal')">Normal day</button><button class="${mode==='queen'?'good':'secondary'}" onclick="setMode('queen')">Queen day</button></div>
+    </div>
+    <div class="card third">
+      <h3>Stats</h3>
+      <div class="row"><div class="stat"><span class="mini">XP</span><b>${state.xp||0}</b></div><div class="stat"><span class="mini">Today</span><b>${completeCount}</b></div></div>
+      <p class="mini">You are not collecting perfection. You are collecting proof.</p>
+      <div class="meter"><span style="width:${clamp(completeCount*12,0,100)}%"></span></div>
+    </div>
 
-      <section id="mind" class="panel">
-        <article class="card" id="emergencyCard"><p class="small-label">Emergency reset</p><h2>When your brain becomes a battlefield</h2><div id="resetSteps" class="mini"></div><button id="copyReset" class="ghost">Copy reset script</button></article>
-        <div class="grid two">
-          <article class="card"><p class="small-label">Thought alchemy</p><h2>Turn spiral into strategy</h2><label>Situation<textarea id="sit"></textarea></label><label>Story my mind tells<textarea id="story"></textarea></label><label>Evidence / kinder truth<textarea id="truth"></textarea></label><label>Queen action<textarea id="action"></textarea></label><button id="saveThought" class="primary">Save thought reset</button></article>
-          <article class="card"><p class="small-label">Nervous system menu</p><h2>Choose by state</h2><div id="stateMenu" class="mini"></div></article>
-        </div>
-      </section>
+    <div class="card half">
+      <h2>Daily quests</h2>
+      ${questHTML('water','Drink water before caffeine',4)}
+      ${questHTML('mainQuest','Choose one main quest for school/work/life',6)}
+      ${questHTML('bodyQuest','Do movement: workout, walk, dance, stretch, or 5-min low-energy version',8)}
+      ${questHTML('realMeal','Eat at least one real meal without making it complicated',7)}
+      ${questHTML('realmReset','Reset one tiny part of your room/desk/bag',5)}
+      ${questHTML('readPages','Read at least 1 page or listen to 5 minutes of an audiobook',4)}
+    </div>
+    <div class="card half">
+      <h2>Today’s body scene</h2>
+      <span class="badge">Week ${weekNum()} · ${p.phase}</span>
+      <h3>${w.name}</h3><p class="muted">${w.vibe} · ${w.duration}</p>
+      <ul class="list">${w.main.slice(0,5).map(x=>`<li>${x}</li>`).join('')}</ul>
+      <p class="mini"><b>Low energy:</b> ${w.low}</p>
+      <button onclick="showTab('body')">Open full workout</button>
+    </div>
 
-      <section id="style" class="panel">
-        <div class="grid two">
-          <article class="card"><p class="small-label">Closet capture</p><h2>Import outfit / clothes photos</h2><input id="photo" type="file" accept="image/*" capture="environment"><label>Name<input id="itemName" placeholder="black boots, cream sweater..."></label><label>Category<select id="itemCat"><option>Top</option><option>Bottom</option><option>Dress</option><option>Outerwear</option><option>Shoes</option><option>Accessory</option><option>Bag</option><option>Full outfit</option></select></label><label>Vibe<select id="itemVibe"><option>Aelin</option><option>Feyre</option><option>Poppy</option><option>Jude</option><option>Academic</option><option>Cozy</option><option>Dark Fae</option><option>Soft Court</option></select></label><label>Tags<input id="itemTags" placeholder="rain, class, date, black, gold"></label><button id="saveItem" class="primary">Add to closet</button></article>
-          <article class="card"><p class="small-label">Outfit oracle</p><h2>Arrange by vibe</h2><label>Vibe<select id="oracleVibe"><option>Aelin</option><option>Feyre</option><option>Poppy</option><option>Jude</option><option>Academic</option><option>Cozy</option><option>Dark Fae</option><option>Soft Court</option></select></label><label>Context<input id="oracleContext" placeholder="class, internship, date, rainy cold..."></label><button id="buildOutfit" class="primary">Build outfit</button><div id="outfitResult" class="outfit"></div></article>
-        </div>
-        <article class="card"><div class="section-title"><div><p class="small-label">Closet</p><h2>Your saved pieces</h2></div><button id="exportCloset" class="ghost">Export closet</button></div><div id="closet" class="closet"></div></article>
-        <article class="card"><p class="small-label">Style doctrine</p><h2>Vibe formulas</h2><div id="vibeFormulas" class="training-grid"></div></article>
-      </section>
+    <div class="card">
+      <h2>All-day timeline</h2>
+      <p class="muted">This is the backbone. You can ignore times and use it as an order of operations.</p>
+      <div class="timeline">${timeline.map(b=>`<div class="timeblock ${b.t===cur.t?'now':''}"><div class="time">${b.t}</div><div><strong>${b.chapter}</strong> <span class="badge">${b.tag}</span><br><span class="muted">${modeText(b)}</span></div></div>`).join('')}</div>
+    </div>
 
-      <section id="realm" class="panel">
-        <article class="card"><p class="small-label">Realm care</p><h2>Room, study, money, admin</h2><p class="muted">Life feels more magical when the boring systems stop attacking you.</p><div id="realmQuests" class="training-grid"></div></article>
-        <div class="grid two">
-          <article class="card"><p class="small-label">Study/work sprint</p><h2>Jude focus block</h2><label>Main task<input id="sprintTask" placeholder="open report, revise chapter, send email..."></label><label>First tiny move<input id="sprintMove" placeholder="open laptop + title document"></label><button id="startSprint" class="primary">Start 25-min sprint</button><p id="sprintStatus" class="callout"></p></article>
-          <article class="card"><p class="small-label">Money check</p><h2>5-minute finance ritual</h2><div id="moneySteps" class="mini"></div></article>
-        </div>
-      </section>
+    <div class="card half">
+      <h2>Minimum day protocol</h2>
+      <p class="quote">Do not abandon yourself just because you cannot transform yourself today.</p>
+      <ol class="list"><li>Water.</li><li>Teeth or face wash.</li><li>Open curtains/window.</li><li>Eat anything simple.</li><li>Move for 3–5 minutes.</li><li>Put one thing away.</li><li>Message one human or step outside.</li><li>Phone away for one page before sleep.</li></ol>
+    </div>
+    <div class="card half">
+      <h2>Main character useless magic</h2>
+      <p class="muted">Useless on paper. Useful for feeling alive.</p>
+      <ul class="list"><li>Name today’s chapter like a book title.</li><li>Wear one secret “court” detail nobody needs to understand.</li><li>Make a playlist for the version of you you are becoming.</li><li>Take one photo of light, sky, coffee, outfit, book, or desk.</li><li>Say “scene change” before switching from bed rot to action.</li></ul>
+    </div>
+  </div>`;
+}
+function setMode(m){state.mode=m; save(); render()}
 
-      <section id="review" class="panel">
-        <div class="grid two"><article class="card"><p class="small-label">Stats</p><h2>Your proof archive</h2><div id="stats" class="mini"></div></article><article class="card"><p class="small-label">Weekly review</p><h2>Coronation notes</h2><label>What worked?<textarea id="worked"></textarea></label><label>What drained me?<textarea id="drained"></textarea></label><label>What will I simplify?<textarea id="simplify"></textarea></label><button id="saveReview" class="primary">Save review</button></article></div>
-        <article class="card"><p class="small-label">Saved reflections</p><h2>Archive</h2><div id="archive" class="mini"></div></article>
-      </section>
-
-      <section id="settings" class="panel">
-        <article class="card"><p class="small-label">Customize</p><h2>Your routine times</h2><div id="settingsRituals" class="settings-grid"></div><button id="saveSettings" class="primary">Save times</button></article>
-        <div class="grid two"><article class="card"><p class="small-label">Notifications</p><h2>Samsung reminders</h2><p class="muted">App notifications work when your browser allows them. Calendar import is the reliable backup.</p><button id="enableNotifications" class="primary">Enable app notifications</button><button id="testNotification" class="ghost">Test notification</button><a class="buttonlink" href="queen_os_lifestyle_calendar_backup.ics" download>Download calendar backup</a></article><article class="card"><p class="small-label">Data</p><h2>Backup / reset</h2><button id="exportData" class="ghost">Export app data</button><input id="importFile" type="file" accept="application/json" class="hidden"><button id="importData" class="ghost">Import app data</button><button id="resetAll" class="ghost danger">Hard reset</button></article></div>
-        <article class="card"><p class="small-label">Separation plan</p><h2>Lifestyle app vs Knowledge Scroll</h2><p class="muted">This app stays ritual-focused. The Smart Scroll should be a separate app so it can be full-screen, infinite, noisy, and curiosity-driven without distracting your daily life command center.</p></article>
-      </section>
-    </main>
+function renderBody(){
+ const w=todayWorkout(), p=progression();
+ $('#body').innerHTML=`
+ <div class="grid">
+  <div class="card twothird">
+    <div class="between"><div><h2>Body Court</h2><p class="muted">No-equipment, apartment-friendly, Samsung timer ready. You are training for energy, posture, confidence, and proof — not punishment.</p></div><span class="badge">Week ${weekNum()}</span></div>
+    <div class="menuCard"><h3>${w.name}</h3><p class="muted">${w.vibe} · ${w.duration}</p><p><b>Today’s rule:</b> ${p.rule}</p><p><b>Low-energy version:</b> ${w.low}</p></div>
+    <div class="split">
+      <div class="menuCard"><strong>Warm-up</strong><ol class="list">${w.warm.map(x=>`<li>${x}</li>`).join('')}</ol></div>
+      <div class="menuCard"><strong>Main workout</strong><ol class="list">${w.main.map(x=>`<li>${x}</li>`).join('')}</ol></div>
+    </div>
+    <div class="menuCard"><strong>Finisher</strong><p>${w.finisher}</p><p class="quote">${w.quote}</p><button onclick="completeQuest('workoutFull',15)">${isChecked('workoutFull')?'Workout logged':'Log workout'} +15 XP</button></div>
   </div>
-  <template id="questTemplate"><label class="quest"><input type="checkbox"><span class="quest-body"><strong></strong><small></small></span></label></template>
-  <script src="app.js"></script>
+  <div class="card third">
+    <h3>Training timer</h3><p class="muted">Use for rounds, stretches, or focus.</p><label>Minutes</label><input id="timerMin" type="number" min="1" value="10"><div class="row"><button onclick="startTimer()">Start</button><button class="secondary" onclick="stopTimer()">Stop</button></div><h2 id="timerDisplay">10:00</h2>
+    <p class="mini">For Samsung: keep the app open if you want the sound/alert.</p>
+  </div>
+  <div class="card">
+    <h2>8-week progression</h2>
+    <div class="grid">
+      <div class="card flat third"><h3>Weeks 1–2</h3><p>Learn form. Do the baseline sets. Make the workout feel possible.</p></div>
+      <div class="card flat third"><h3>Weeks 3–4</h3><p>Add 1 set to key moves or add 2 reps per set.</p></div>
+      <div class="card flat third"><h3>Weeks 5–6</h3><p>Slow tempo: lower for 3 seconds. Control is power.</p></div>
+      <div class="card flat third"><h3>Weeks 7–8</h3><p>Harder versions: heavier backpack, lower push-up incline, longer plank.</p></div>
+      <div class="card flat third"><h3>After week 8</h3><p>Repeat with harder versions or add dumbbells/resistance bands.</p></div>
+      <div class="card flat third"><h3>Bad week rule</h3><p>Never restart from shame. Repeat the previous week and keep going.</p></div>
+    </div>
+  </div>
+  <div class="card half">
+    <h2>If you hate working out today</h2>
+    <ul class="list"><li>One-song dance clean.</li><li>Walk to buy bread/coffee and come back.</li><li>10 squats every time you enter your room.</li><li>Stretch while reading.</li><li>Put on workout clothes only. If still no, you’re done.</li></ul>
+  </div>
+  <div class="card half">
+    <h2>Form cues</h2>
+    <ul class="list"><li>Squat: knees follow toes, chest proud, slow down.</li><li>Lunge: small step is okay, hold wall if needed.</li><li>Push-up: hands under shoulders, body like a plank.</li><li>Row: squeeze shoulder blade toward spine.</li><li>Plank: ribs down, glutes lightly tight, breathe.</li></ul>
+  </div>
+ </div>`;
+ updateTimerDisplay();
+}
+let timerInt=null, timerSec=600;
+function updateTimerDisplay(){const el=$('#timerDisplay'); if(el){el.textContent=`${String(Math.floor(timerSec/60)).padStart(2,'0')}:${String(timerSec%60).padStart(2,'0')}`}}
+function startTimer(){const input=$('#timerMin'); timerSec=(parseInt(input.value)||10)*60; clearInterval(timerInt); updateTimerDisplay(); timerInt=setInterval(()=>{timerSec--; updateTimerDisplay(); if(timerSec<=0){clearInterval(timerInt); alert('Timer done, your majesty.');}},1000)}
+function stopTimer(){clearInterval(timerInt)}
+
+function mealCard(m){return `<div class="menuCard"><strong>${m.name}</strong><p>${m.items}</p><p class="mini">${m.why}</p><button class="small secondary" onclick="saveMeal('${m.name.replace(/'/g,"\\'")}')">Save idea</button></div>`}
+function randomMeal(type){const arr=mealBank[type]; return arr[Math.floor(Math.random()*arr.length)]}
+function renderMeals(){
+ const b=randomMeal('breakfast'), l=randomMeal('lunch'), d=randomMeal('dinner'), s=randomMeal('snack');
+ $('#meals').innerHTML=`
+ <div class="grid">
+  <div class="card twothird">
+    <h2>Meal Court</h2><p class="muted">French, simple, student-realistic, no peanut butter, not vegetable-heavy. The goal is to eat enough and stop turning food into a moral trial.</p>
+    <div class="split"><div>${mealCard(b)}</div><div>${mealCard(l)}</div><div>${mealCard(d)}</div><div>${mealCard(s)}</div></div>
+    <button onclick="renderMeals()">Generate another simple day</button>
+  </div>
+  <div class="card third">
+    <h3>Meal formula</h3><p><b>1 base</b> + <b>1 protein</b> + <b>1 comfort</b> + optional easy fruit/veg.</p><ul class="list"><li>Base: pasta, rice, bread, potatoes, semoule, wraps.</li><li>Protein: eggs, ham, chicken, tuna, yogurt, cheese, lentils if okay.</li><li>Comfort: crème, cheese, sauce, butter, spices.</li><li>Optional: fruit, compote, tomato sauce, cucumber, corn.</li></ul></div>
+  <div class="card half"><h2>Emergency meals</h2><ul class="list"><li>Ravioli/gnocchi + cheese.</li><li>Frozen pizza + yogurt/fruit.</li><li>Croque-monsieur.</li><li>Omelette + baguette.</li><li>Tuna pasta.</li><li>Cereal + milk + compote if truly exhausted.</li><li>Ready quiche + drink.</li><li>Nuggets/fish fingers + potatoes.</li></ul></div>
+  <div class="card half"><h2>Stealth vegetables, optional</h2><p class="muted">Not salads. Not punishment. Tiny upgrades when you can tolerate them.</p><div class="chips">${stealthVeg.map(x=>`<span class="chip">${x}</span>`).join('')}</div><p class="mini">You can ignore this section and still use the app. It is here for future-you, not to annoy today-you.</p></div>
+  <div class="card">
+    <h2>Simple French grocery list</h2>
+    <div class="grid">
+      <div class="card flat third"><h3>Basics</h3><ul class="list"><li>Pasta/rice/semoule</li><li>Bread/tortillas</li><li>Potatoes</li><li>Cereal/granola</li><li>Biscuits/chocolate</li></ul></div>
+      <div class="card flat third"><h3>Proteins</h3><ul class="list"><li>Eggs</li><li>Ham/chicken/turkey</li><li>Tuna</li><li>Yogurt/fromage blanc</li><li>Cheese</li></ul></div>
+      <div class="card flat third"><h3>Comfort</h3><ul class="list"><li>Crème fraîche</li><li>Grated cheese</li><li>Pesto/tomato sauce</li><li>Butter/jam/honey/Nutella</li><li>Spices you actually use</li></ul></div>
+      <div class="card flat third"><h3>Easy extras</h3><ul class="list"><li>Compote</li><li>Bananas/apples</li><li>Cucumber/tomatoes if okay</li><li>Frozen veg if okay</li><li>Soup/velouté if okay</li></ul></div>
+      <div class="card flat third"><h3>Lazy freezer</h3><ul class="list"><li>Pizza</li><li>Nuggets/fish fingers</li><li>Ravioli/gnocchi</li><li>Frozen bread/pastry</li><li>Ready quiche</li></ul></div>
+      <div class="card flat third"><h3>Drinks</h3><ul class="list"><li>Water bottle</li><li>Coffee/tea</li><li>Milk</li><li>Juice if you like</li><li>Hot chocolate</li></ul></div>
+    </div>
+  </div>
+ </div>`;
+}
+function saveMeal(name){state.meals.saved=state.meals.saved||[]; state.meals.saved.push(name); save(); alert('Saved meal idea: '+name)}
+
+function renderArmor(){
+ const pieces=state.wardrobe||[];
+ $('#armor').innerHTML=`
+ <div class="grid">
+  <div class="card twothird"><h2>Armor Court</h2><p class="muted">Your clothes are not a performance. They are a spell: comfort, identity, weather, confidence, and “I belong in my own life.”</p>
+    <div class="split">
+      <div><label>Vibe</label><select id="vibeSelect">${Object.keys(outfitVibes).map(v=>`<option>${v}</option>`).join('')}</select></div>
+      <div><label>Context</label><select id="contextSelect"><option>class / study</option><option>date / going out</option><option>errands</option><option>home reset</option><option>workout</option><option>soft reading night</option></select></div>
+    </div>
+    <div class="row"><button onclick="generateArmor()">Generate outfit spell</button><button class="secondary" onclick="document.getElementById('piecePhoto').click()">Add clothing photo</button></div>
+    <input id="piecePhoto" class="hidden" type="file" accept="image/*" capture="environment" onchange="addPiecePhoto(event)">
+    <div id="armorOracle" class="menuCard"><strong>Today’s default armor</strong><p>Clean base + one intentional detail + comfortable shoes + lip balm. That already counts.</p></div>
+  </div>
+  <div class="card third"><h3>Add piece manually</h3><label>Name</label><input id="pieceName" placeholder="black top, gold earrings..."><label>Category</label><select id="pieceCat"><option>top</option><option>bottom</option><option>dress</option><option>shoes</option><option>jacket</option><option>accessory</option><option>beauty</option></select><label>Vibes</label><input id="pieceVibe" placeholder="Aelin, Jude, Student"><button onclick="addPieceManual()">Add piece</button></div>
+  <div class="card"><h2>Closet</h2><p class="muted">Photos are stored in this browser on your phone. Keep originals elsewhere too.</p><div class="outfitGrid">${pieces.length?pieces.map((p,i)=>pieceHTML(p,i)).join(''):'<p class="muted">No pieces yet. Add photos of clothes or write pieces manually.</p>'}</div></div>
+  <div class="card half"><h2>Beauty maintenance menu</h2><ul class="list"><li>Daily: face, teeth, deodorant, lip balm.</li><li>2–3x/week: hair care, body lotion, nails check.</li><li>Weekly: everything shower, shave/trim if you want, laundry, outfit planning.</li><li>Monthly: clean makeup/tools, declutter one drawer, update wardrobe wishlist.</li></ul></div>
+  <div class="card half"><h2>Outfit formulas</h2><ul class="list"><li><b>Lazy Queen:</b> matching comfy pieces + jewelry + tidy hair.</li><li><b>Student Court:</b> jeans/trousers + clean top + cardigan + sneakers.</li><li><b>Dark Fae:</b> black base + green/gold/silver detail + boots.</li><li><b>Soft Archeron:</b> sweater + light color + delicate accessory.</li><li><b>Jude Mode:</b> structured jacket + belt/rings + serious shoes.</li></ul></div>
+ </div>`;
+}
+function pieceHTML(p,i){return `<div class="piece">${p.img?`<img src="${p.img}" alt="${p.name}">`:`<div style="height:130px;display:grid;place-items:center;color:#77647c">${p.cat||'piece'}</div>`}<div class="p"><div class="name">${p.name}</div><div class="mini">${p.cat||''} · ${p.vibe||''}</div><button class="small ghost" onclick="removePiece(${i})">Remove</button></div></div>`}
+function addPieceManual(){const name=$('#pieceName').value.trim(); if(!name)return; state.wardrobe=state.wardrobe||[]; state.wardrobe.push({name,cat:$('#pieceCat').value,vibe:$('#pieceVibe').value,img:null}); save(); renderArmor()}
+function addPiecePhoto(e){const file=e.target.files[0]; if(!file)return; const reader=new FileReader(); reader.onload=()=>{const name=prompt('Name this piece/outfit photo:', file.name.replace(/\..+$/,''))||'clothing piece'; const vibe=prompt('Vibes/tags? Example: Aelin, black, class, cozy')||''; state.wardrobe=state.wardrobe||[]; state.wardrobe.push({name,cat:'photo',vibe,img:reader.result}); save(); renderArmor()}; reader.readAsDataURL(file)}
+function removePiece(i){state.wardrobe.splice(i,1); save(); renderArmor()}
+function generateArmor(){const vibe=$('#vibeSelect').value, context=$('#contextSelect').value; const formula=outfitVibes[vibe]||outfitVibes.Student; const matches=(state.wardrobe||[]).filter(p=>(p.vibe||'').toLowerCase().includes(vibe.toLowerCase())); $('#armorOracle').innerHTML=`<strong>${vibe} armor for ${context}</strong><ul class="list">${formula.map(x=>`<li>${x}</li>`).join('')}</ul>${matches.length?`<p><b>Your closet match:</b> ${matches.slice(0,4).map(p=>p.name).join(', ')}</p>`:`<p class="mini">No saved closet pieces match this vibe yet. Use the formula with what you own.</p>`}<p class="quote">One intentional detail is enough to change the scene.</p>`}
+
+function renderMind(){
+ $('#mind').innerHTML=`
+ <div class="grid">
+  <div class="card half"><h2>Mind Court</h2><p class="muted">Not therapy. Not “fix yourself.” This is the emergency room, strategy table, and soft blanket of the app.</p><label>Mood weather</label><select id="moodWeather"><option>storm</option><option>fog</option><option>rain</option><option>clouds</option><option>sun</option><option>fire</option></select><label>Energy 1–5</label><input id="energy" type="range" min="1" max="5" value="${state.mood.energy||3}"><button onclick="saveMood()">Save mood</button><div id="moodAdvice" class="menuCard">${moodAdvice()}</div></div>
+  <div class="card half dangerBox"><h2>Bad moment reset</h2><ol class="list"><li>Name it: “I am having a spiral, not receiving prophecy.”</li><li>Drink water or wash hands.</li><li>Put both feet on the floor.</li><li>Do one physical reset: shower, walk, tidy, stretch, or change clothes.</li><li>Choose one next action under 5 minutes.</li></ol><button class="bad" onclick="setMode('low')">Switch to minimum day</button></div>
+  <div class="card"><h2>Thought alchemy</h2><div class="split"><div><label>What happened, factually?</label><textarea id="fact" placeholder="No drama, just facts."></textarea></div><div><label>What story is my brain telling?</label><textarea id="story"></textarea></div><div><label>What is a kinder, more accurate truth?</label><textarea id="truth"></textarea></div><div><label>What is the queen action?</label><textarea id="queenAction" placeholder="One visible next move."></textarea></div></div><button onclick="saveThought()">Save thought reset</button></div>
+  <div class="card half"><h2>Confidence scripts</h2>${scripts.map(s=>`<div class="quest"><span>${s}</span></div>`).join('')}</div>
+  <div class="card half"><h2>Regulation menu</h2><ul class="list"><li><b>Body:</b> walk, stretch, shower, eat, breathe, sleep.</li><li><b>Space:</b> trash bag, clothes pile, desk surface, open window.</li><li><b>Social:</b> text someone “can you distract me?”</li><li><b>Beauty:</b> wash face, brush hair, lip balm, perfume.</li><li><b>Fantasy:</b> read one chapter, but stop before sleep sacrifice.</li></ul></div>
+ </div>`;
+}
+function moodAdvice(){const e=state.mood.energy||3; if(e<=2)return '<strong>Low energy ruling:</strong><p>Minimum day. Eat, water, hygiene, one tiny reset. No big identity decisions tonight.</p>'; if(e==3)return '<strong>Middle energy ruling:</strong><p>Normal day. One body quest, one work quest, one comfort quest.</p>'; return '<strong>High energy ruling:</strong><p>Use it, don’t waste it. Do the annoying task, prep future-you, then rest on purpose.</p>'}
+function saveMood(){state.mood.weather=$('#moodWeather').value; state.mood.energy=parseInt($('#energy').value); save(); renderMind()}
+function saveThought(){const k=todayKey(); state.notes.thoughts=state.notes.thoughts||[]; state.notes.thoughts.push({date:k,fact:$('#fact').value,story:$('#story').value,truth:$('#truth').value,action:$('#queenAction').value}); save(); alert('Saved. Your brain has been cross-examined by Jude and comforted by Feyre.')}
+
+function renderRealm(){
+ $('#realm').innerHTML=`
+ <div class="grid">
+  <div class="card twothird"><h2>Realm Court</h2><p class="muted">Your room, school/work, money, admin, social life, and future-you logistics. This is where Jude lives.</p><div class="row"><button onclick="realmRandom()">Give me one realm quest</button><button class="secondary" onclick="startFocus(25)">Start 25-min focus</button><button class="secondary" onclick="startFocus(10)">Start 10-min reset</button></div><div id="realmQuest" class="menuCard"><strong>Default quest</strong><p>Clear one surface. Trash first. Clothes second. Dishes third.</p></div><h2 id="focusDisplay">Focus timer: idle</h2></div>
+  <div class="card third"><h3>Admin capture</h3><label>Annoying thing to do</label><input id="adminInput" placeholder="email, appointment, paper, payment..."><button onclick="addAdmin()">Add</button><div id="adminList"></div></div>
+  <div class="card"><h2>Room reset zones</h2><div class="grid">${roomZones.map(z=>`<div class="card flat third"><h3>${z.name}</h3><ol class="list">${z.steps.map(s=>`<li>${s}</li>`).join('')}</ol><button class="small" onclick="completeQuest('zone_${z.name.replace(/\s/g,'')}',6)">Done +6 XP</button></div>`).join('')}</div></div>
+  <div class="card half"><h2>Study/work system</h2><ul class="list"><li><b>Opening move:</b> open file, write date/title, write the next tiny task.</li><li><b>25-min battle:</b> phone away, one tab, one objective.</li><li><b>End note:</b> write where to restart tomorrow.</li><li><b>Jude rule:</b> vague tasks are traps. Convert them to verbs.</li></ul></div>
+  <div class="card half"><h2>Money mini-routine</h2><ul class="list"><li>Sunday: check bank app, upcoming bills, food budget.</li><li>Before buying: ask “do I want the object or the feeling?”</li><li>Wishlist delay: 48 hours for non-urgent things.</li><li>Track without shame: groceries, transport, school, fun, beauty, books.</li></ul></div>
+  <div class="card half"><h2>Social life quests</h2><ul class="list"><li>Send one “thinking of you” message.</li><li>Plan a cheap date: walk, bakery, movie night, bookstore browse.</li><li>Compliment someone genuinely.</li><li>Ask for help before you disappear.</li></ul></div>
+  <div class="card half"><h2>Weekly reset</h2><ul class="list"><li>Laundry.</li><li>3 simple meals chosen.</li><li>3 outfits prepared.</li><li>Calendar checked.</li><li>Room zone cleaned.</li><li>One fun thing scheduled.</li></ul></div>
+ </div>`; renderAdmin();
+}
+function realmRandom(){const all=[...roomZones.flatMap(z=>z.steps), 'Open your calendar and check tomorrow', 'Delete 20 photos/screenshots', 'Prepare your bag', 'Change bedsheets if needed', 'Write 3 priorities', 'Put laundry in basket', 'Clear desk surface', 'Send the admin email', 'Make a cheap date plan']; const q=all[Math.floor(Math.random()*all.length)]; $('#realmQuest').innerHTML=`<strong>Realm quest</strong><p>${q}</p><button onclick="completeQuest('realmRandom',7)">Done +7 XP</button>`}
+let focusInt=null, focusSec=0;
+function startFocus(min){focusSec=min*60; clearInterval(focusInt); focusInt=setInterval(()=>{focusSec--; $('#focusDisplay').textContent=`Focus timer: ${String(Math.floor(focusSec/60)).padStart(2,'0')}:${String(focusSec%60).padStart(2,'0')}`; if(focusSec<=0){clearInterval(focusInt); alert('Focus scene complete. Write the next move.')}},1000)}
+function addAdmin(){const v=$('#adminInput').value.trim(); if(!v)return; state.notes.admin=state.notes.admin||[]; state.notes.admin.push({text:v,done:false}); save(); renderAdmin(); $('#adminInput').value=''}
+function renderAdmin(){const el=$('#adminList'); if(!el)return; const arr=state.notes.admin||[]; el.innerHTML=arr.length?arr.map((a,i)=>`<label class="quest ${a.done?'done':''}"><input type="checkbox" ${a.done?'checked':''} onchange="toggleAdmin(${i})"><span>${a.text}</span></label>`).join(''):'<p class="mini">No admin captured.</p>'}
+function toggleAdmin(i){state.notes.admin[i].done=!state.notes.admin[i].done; if(state.notes.admin[i].done) state.xp+=5; save(); renderAdmin()}
+
+function renderBooks(){
+ const archetypes=[['Aelin','When you need courage: pick the visible action and move before fear finishes speaking.'],['Feyre','When you need healing: make the room softer, the body calmer, the night kinder.'],['Poppy','When you need freedom: ask what you want and eat enough to want things.'],['Jude','When you need discipline: make a plan, keep receipts, choose the leverage point.']];
+ $('#books').innerHTML=`
+ <div class="grid">
+  <div class="card twothird"><h2>Bookish Ritual Court</h2><p class="muted">Romantasy is not just escape. It is symbolic fuel. The rule: every chapter must give you one real-life spell.</p><div class="menuCard"><strong>Night reading ritual</strong><ol class="list"><li>Phone away or Do Not Disturb.</li><li>Water next to bed.</li><li>Read 10 pages minimum or 1 chapter maximum if sleep is fragile.</li><li>Underline/save one line that feels like power.</li><li>Ask: what is my real-life version?</li></ol></div><button onclick="completeQuest('readingRitual',5)">Log reading ritual +5 XP</button></div>
+  <div class="card third"><h3>Add TBR</h3><label>Book</label><input id="tbrInput" placeholder="title / author"><button onclick="addTBR()">Add</button><div id="tbrList"></div></div>
+  <div class="card"><h2>Character energy translations</h2><div class="grid">${archetypes.map(a=>`<div class="card flat third"><h3>${a[0]}</h3><p>${a[1]}</p></div>`).join('')}</div></div>
+  <div class="card half"><h2>Reading prompts</h2><ul class="list"><li>What did this heroine refuse to tolerate?</li><li>What did she train for quietly?</li><li>Where did she ask for help?</li><li>What was her boundary?</li><li>What did she make beautiful?</li><li>What secret skill would I like to build?</li></ul></div>
+  <div class="card half"><h2>Your personal mythology</h2><ul class="list"><li>Name your room/desk like a court.</li><li>Name your current life chapter.</li><li>Write your “oath” for exams, internship, health, or love.</li><li>Create a playlist for each energy.</li><li>Keep a quote archive of lines that make you sit up straighter.</li></ul></div>
+ </div>`; renderTBR();
+}
+function addTBR(){const v=$('#tbrInput').value.trim(); if(!v)return; state.tbr=state.tbr||[]; state.tbr.push({title:v,done:false}); save(); renderTBR(); $('#tbrInput').value=''}
+function renderTBR(){const el=$('#tbrList'); if(!el)return; el.innerHTML=(state.tbr||[]).map((b,i)=>`<label class="quest ${b.done?'done':''}"><input type="checkbox" ${b.done?'checked':''} onchange="toggleTBR(${i})"><span>${b.title}</span></label>`).join('')||'<p class="mini">No TBR yet.</p>'}
+function toggleTBR(i){state.tbr[i].done=!state.tbr[i].done; save(); renderTBR()}
+
+function renderSettings(){
+ $('#settings').innerHTML=`
+ <div class="grid">
+  <div class="card half"><h2>Make it yours</h2><label>Name</label><input id="prefName" value="${state.name||''}"><label>Wake time</label><input id="prefWake" type="time" value="${state.prefs.wake}"><label>Sleep target</label><input id="prefSleep" type="time" value="${state.prefs.sleep}"><label>Disliked foods / rules</label><textarea id="prefDisliked">${state.prefs.disliked||''}</textarea><label>Main real-life quest</label><input id="prefStudy" value="${state.prefs.study||''}"><button onclick="savePrefs()">Save me settings</button></div>
+  <div class="card half"><h2>Reminders</h2><p class="muted">App notifications work best while the app has been opened recently. Calendar backup is the reliable Samsung option.</p><div class="row"><button onclick="enableNotifications()">Enable app notifications</button><button class="secondary" onclick="downloadICS()">Download calendar backup</button></div><p class="mini">The calendar file creates daily lifestyle reminders for your timeline.</p></div>
+  <div class="card half"><h2>Install on Samsung</h2><ol class="list"><li>Upload this folder to Netlify Drop or GitHub Pages.</li><li>Open the site in Chrome or Samsung Internet.</li><li>Tap menu → Add to Home screen / Install app.</li><li>Open from the icon.</li><li>Import the calendar backup into Google Calendar or Samsung Calendar.</li></ol></div>
+  <div class="card half dangerBox"><h2>Reset</h2><p>This deletes local progress, wardrobe entries saved in this browser, notes, XP, and settings.</p><button class="bad" onclick="resetApp()">Reset app data</button></div>
+  <div class="card"><h2>What this app is now</h2><p class="quote">A full all-day lifestyle app. No Smart Scroll. No endless content feed. You open it to live your life, not to disappear into it.</p><div class="grid"><div class="card flat third"><h3>Morning</h3><p>Wake, hygiene, breakfast, outfit, first quest.</p></div><div class="card flat third"><h3>Day</h3><p>Study/work, meals, movement, strategy checks.</p></div><div class="card flat third"><h3>Night</h3><p>Dinner, room reset, reading, phone curfew, sleep spell.</p></div></div></div>
+ </div>`;
+}
+function savePrefs(){state.name=$('#prefName').value; state.prefs.wake=$('#prefWake').value; state.prefs.sleep=$('#prefSleep').value; state.prefs.disliked=$('#prefDisliked').value; state.prefs.study=$('#prefStudy').value; save(); render()}
+function resetApp(){if(confirm('Reset everything in this app?')){localStorage.removeItem('qos_state'); state=JSON.parse(JSON.stringify(defaultState)); save(); render()}}
+function enableNotifications(){if(!('Notification' in window)){alert('Notifications are not supported here. Use calendar backup.');return;} Notification.requestPermission().then(p=>{if(p==='granted'){state.remindersEnabled=true; save(); new Notification('Queen OS enabled',{body:'Your lifestyle reminders are allowed. Calendar backup is still recommended.'}); scheduleTodayNotifications();}else alert('Notifications were not enabled. Use calendar backup reminders.');})}
+function scheduleTodayNotifications(){ if(!state.remindersEnabled || !('Notification' in window) || Notification.permission!=='granted') return; const n=nowMin(); timeline.forEach(b=>{const m=timeToMin(b.t); const delay=(m-n)*60*1000; if(delay>0 && delay<12*60*60*1000){setTimeout(()=>new Notification(`${b.chapter}`,{body:modeText(b)}), delay)}})}
+function icsDate(t){const d=new Date(); const [h,m]=t.split(':').map(Number); d.setHours(h,m,0,0); const pad=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(h)}${pad(m)}00`}
+function downloadICS(){let ics='BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Queen OS Lifestyle//V8//EN\nCALSCALE:GREGORIAN\n'; timeline.forEach((b,i)=>{ics+=`BEGIN:VEVENT\nUID:qos-v8-${i}@queen-os\nDTSTAMP:${icsDate('08:00')}\nDTSTART:${icsDate(b.t)}\nRRULE:FREQ=DAILY;COUNT=60\nSUMMARY:${b.chapter.replace(/[,;]/g,' ')}\nDESCRIPTION:${modeText(b).replace(/\n/g,' ')}\nBEGIN:VALARM\nTRIGGER:-PT0M\nACTION:DISPLAY\nDESCRIPTION:${b.chapter.replace(/[,;]/g,' ')}\nEND:VALARM\nEND:VEVENT\n`}); ics+='END:VCALENDAR'; const blob=new Blob([ics],{type:'text/calendar'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='queen_os_lifestyle_v8_calendar.ics'; a.click(); URL.revokeObjectURL(url)}
+
+function renderSection(id){({today:renderToday,body:renderBody,meals:renderMeals,armor:renderArmor,mind:renderMind,realm:renderRealm,books:renderBooks,settings:renderSettings}[id]||renderToday)()}
+function render(){
+ $('#todayDate').textContent=fmtDate(); $('#todayModeLabel').textContent=`${state.mode} mode · ${state.name||'you'}`; bindNav(); renderSection(currentTab);
+}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{})}
+scheduleTodayNotifications();
+render();
+</script>
 </body>
 </html>

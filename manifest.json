@@ -1,21 +1,13 @@
 {
-  "name": "Queen OS Lifestyle V7",
-  "short_name": "Queen OS Life",
+  "name": "Queen OS Lifestyle",
+  "short_name": "Queen OS",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#170f1f",
-  "theme_color": "#3d2455",
-  "description": "A romantasy-inspired Samsung lifestyle command center: routines, workouts, wardrobe, meals, mind resets, and calendar reminders.",
+  "background_color": "#150c16",
+  "theme_color": "#7d3cff",
+  "description": "A main-character lifestyle command center for Samsung.",
   "icons": [
-    {
-      "src": "assets/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "assets/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"},
+    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png"}
   ]
 }

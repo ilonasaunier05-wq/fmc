@@ -1,31 +1,24 @@
-# Queen OS Lifestyle V7 — Samsung PWA
+# Queen OS Lifestyle V8 — Me App
 
-This is the separated lifestyle app. The Smart Scroll should be its own separate full-screen knowledge app; this app is for daily routines, workouts, meals, mindset, wardrobe, room/life admin, and review.
+This version is a separated lifestyle command center only. It intentionally removes Smart Scroll / knowledge feed behavior.
+
+## What it includes
+- All-day timeline with “what do I do now?” guidance.
+- Minimum / normal / queen day modes.
+- 8-week no-equipment workout plan with actual sets, reps, progression, and low-energy swaps.
+- French/simple meal system: no peanut butter, not vegetable-heavy, realistic student meals.
+- Wardrobe and outfit planner with clothing photo import.
+- Mind reset tools, thought alchemy, mood weather, confidence scripts.
+- Realm system for room, admin, study/work, money, social life, weekly reset.
+- Bookish romantasy rituals and TBR.
+- Samsung reminders plus calendar backup export.
 
 ## Install on Samsung
-
-1. Upload this folder to a free static host such as Netlify Drop or GitHub Pages.
+1. Upload this folder to a static host such as Netlify Drop or GitHub Pages.
 2. Open the hosted link in Chrome or Samsung Internet.
-3. Use the browser menu to install/add to Home Screen.
-4. Open the app from the Home Screen.
-5. Go to Settings and enable notifications.
-6. Download/import `queen_os_lifestyle_calendar_backup.ics` for reliable reminder alarms.
-
-## Why separate Lifestyle and Smart Scroll?
-
-Lifestyle should be calm and repeatable. Smart Scroll should be infinite, distracting by design, and knowledge-heavy. Separating them prevents the knowledge feed from stealing attention from routines.
-
-## What is inside
-
-- Today dashboard with timeline, XP, mood, and six daily proofs.
-- Minimum day mode for low-energy days.
-- 8-week no-equipment workout plan with sets/reps and low-energy options.
-- Meal builder, emergency meals, and grocery list.
-- Mind reset and thought alchemy journal.
-- Wardrobe photo import and outfit oracle.
-- Realm care: room, study/work, money, admin, social, beauty maintenance.
-- Weekly review, backup/export, local notifications, and calendar backup.
+3. Browser menu → Add to Home screen / Install app.
+4. Open from the Home Screen icon.
+5. Go to Me → Reminders → Download calendar backup and import it into your calendar.
 
 ## Privacy
-
-Data is saved locally in your browser storage. Wardrobe photos are stored locally with IndexedDB. If you host this publicly, do not put private API keys or personal data in the source code.
+Data is saved locally in your browser storage. If you clear site data or uninstall the app, the local app data can disappear. Keep important photos/notes elsewhere too.

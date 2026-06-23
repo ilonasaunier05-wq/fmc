@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#3b1b4f" />
+  <meta name="description" content="Romantasy Queen OS V4: infinite smart scroll, API-powered learning, workouts, wardrobe planner, and Samsung reminders." />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="assets/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Romantasy Queen OS V2</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div class="hero-top">
+        <div>
+          <p class="eyebrow">Samsung / Android PWA · V2</p>
+          <h1>Romantasy Queen OS</h1>
+          <p class="subtitle">Training, wardrobe, infinite smart scroll, API-powered agents, and daily quests.</p>
+        </div>
+        <button id="installBtn" class="ghost hidden">Install</button>
+      </div>
+      <article class="card glow briefing-card">
+        <p class="small-label">Today’s briefing</p>
+        <h2 id="briefingTitle">Open the gates.</h2>
+        <p id="briefingText" class="muted"></p>
+        <div class="button-row">
+          <button id="shareBriefing" class="ghost">Share / copy briefing</button>
+          <button id="panicButton" class="ghost danger">I’m overwhelmed</button>
+        </div>
+      </article>
+    </header>
+
+    <nav class="tabs" aria-label="App sections">
+      <button class="tab active" data-tab="today">Today</button>
+      <button class="tab" data-tab="training">Training</button>
+      <button class="tab" data-tab="wardrobe">Wardrobe</button>
+      <button class="tab" data-tab="learn">Smart Scroll</button>
+      <button class="tab" data-tab="agents">Agents</button>
+      <button class="tab" data-tab="radar">Book Radar</button>
+      <button class="tab" data-tab="mind">Mind</button>
+      <button class="tab" data-tab="settings">Settings</button>
+    </nav>
+
+    <main>
+      <section id="today" class="panel active">
+        <div class="grid two">
+          <article class="card">
+            <p class="small-label">Day <span id="programDay">1</span> of 30</p>
+            <h2 id="dayTitle">Foundation of the Court</h2>
+            <p id="dayDescription" class="muted"></p>
+            <div class="meter" aria-label="daily progress"><span id="progressBar"></span></div>
+            <p class="muted"><span id="xp">0</span> XP · streak <span id="streak">0</span> days · level <span id="level">1</span></p>
+          </article>
+          <article class="card">
+            <p class="small-label">Mood weather</p>
+            <div class="mood-row" id="moodButtons"></div>
+            <textarea id="moodNote" placeholder="One honest sentence. No performance."></textarea>
+            <button id="saveMood" class="primary">Save mood</button>
+          </article>
+        </div>
+
+        <article class="card">
+          <div class="section-heading">
+            <div>
+              <p class="small-label">Today’s quests</p>
+              <h2>Complete the visible proof</h2>
+            </div>
+            <button id="resetToday" class="ghost danger">Reset today</button>
+          </div>
+          <div id="todayQuests" class="quest-list"></div>
+        </article>
+
+        <div class="grid two">
+          <article class="card">
+            <p class="small-label">Today’s workout</p>
+            <h2 id="todayWorkoutName"></h2>
+            <p id="todayWorkoutPurpose" class="muted"></p>
+            <div id="todayWorkoutSteps" class="mini-list"></div>
+            <details>
+              <summary>Low-energy swap</summary>
+              <p id="todayWorkoutLow" class="muted"></p>
+            </details>
+            <button id="markWorkout" class="primary">Mark workout complete</button>
+          </article>
+          <article class="card">
+            <p class="small-label">Armor + meal</p>
+            <h2 id="todayVibe"></h2>
+            <p id="todayArmor" class="muted"></p>
+            <p id="todayMeal" class="muted"></p>
+            <button id="openWardrobeFromToday" class="ghost">Open wardrobe planner</button>
+          </article>
+        </div>
+      </section>
+
+      <section id="training" class="panel">
+        <article class="card">
+          <p class="small-label">4-week no-equipment plan</p>
+          <h2>Actual daily training</h2>
+          <p class="muted">Designed to hit the adult baseline of weekly cardio plus 2+ strength days, while staying realistic. Start soft; consistency is the crown.</p>
+          <div class="week-controls">
+            <button class="ghost weekBtn" data-week="1">Week 1</button>
+            <button class="ghost weekBtn" data-week="2">Week 2</button>
+            <button class="ghost weekBtn" data-week="3">Week 3</button>
+            <button class="ghost weekBtn" data-week="4">Week 4</button>
+          </div>
+          <div id="trainingWeek" class="training-grid"></div>
+        </article>
+
+        <article class="card">
+          <p class="small-label">Exercise timer</p>
+          <h2 id="timerTitle">Training room</h2>
+          <p id="timerStep" class="timer-step">Pick a workout and start.</p>
+          <div class="timer-display" id="timerDisplay">00:00</div>
+          <div class="button-row">
+            <button id="startTimer" class="primary">Start 30s timer</button>
+            <button id="stopTimer" class="ghost danger">Stop</button>
+          </div>
+        </article>
+      </section>
+
+      <section id="wardrobe" class="panel">
+        <div class="grid two">
+          <article class="card">
+            <p class="small-label">Closet capture</p>
+            <h2>Add clothes from photos</h2>
+            <p class="muted">Take a picture or import one. Photos stay in this app’s local browser storage unless you export them yourself.</p>
+            <input id="clothingPhoto" type="file" accept="image/*" capture="environment" />
+            <label>Name<input id="clothingName" placeholder="Black boots, cream sweater..." /></label>
+            <div class="grid two tiny-gap">
+              <label>Category<select id="clothingCategory"><option>Top</option><option>Bottom</option><option>Dress</option><option>Outerwear</option><option>Shoes</option><option>Accessory</option><option>Bag</option></select></label>
+              <label>Vibe<select id="clothingVibe"><option>Aelin</option><option>Feyre</option><option>Poppy</option><option>Jude</option><option>Academic</option><option>Cozy</option><option>Dark Fae</option><option>Soft Court</option></select></label>
+            </div>
+            <label>Tags<input id="clothingTags" placeholder="black, gold, winter, date, class" /></label>
+            <button id="saveClothing" class="primary">Add to closet</button>
+          </article>
+
+          <article class="card">
+            <p class="small-label">Outfit oracle</p>
+            <h2>Build by vibe + weather</h2>
+            <div class="grid two tiny-gap">
+              <label>Vibe<select id="outfitVibe"><option>Aelin</option><option>Feyre</option><option>Poppy</option><option>Jude</option><option>Academic</option><option>Cozy</option><option>Dark Fae</option><option>Soft Court</option></select></label>
+              <label>Weather<select id="weatherMode"><option value="manual">Manual</option><option value="auto">Use location</option></select></label>
+            </div>
+            <label>Temperature / context<input id="manualWeather" placeholder="cold rain, 18°C class, date night..." /></label>
+            <div class="button-row">
+              <button id="getWeather" class="ghost">Fetch weather</button>
+              <button id="buildOutfit" class="primary">Arrange outfit</button>
+            </div>
+            <p id="weatherResult" class="muted"></p>
+            <div id="outfitResult" class="outfit-result"></div>
+          </article>
+        </div>
+
+        <article class="card">
+          <div class="section-heading">
+            <div><p class="small-label">Your closet</p><h2>Pieces by vibe</h2></div>
+            <button id="exportWardrobe" class="ghost">Export closet backup</button>
+          </div>
+          <div id="closetGrid" class="closet-grid"></div>
+        </article>
+      </section>
+
+      <section id="learn" class="panel">
+        <article class="card smart-card">
+          <p class="small-label">Smart scroller</p>
+          <h2>Replace doomscrolling with tiny power</h2>
+          <p class="muted">This is now an endless scroll: offline-generated cards forever, plus optional online cards from free sources and your own free API keys.</p>
+          <div class="smart-controls">
+            <label>Mode
+              <select id="smartSource">
+                <option value="auto">Auto mix</option>
+                <option value="offline">Offline infinite</option>
+                <option value="wiki">Wikipedia / Wikimedia</option>
+                <option value="openlibrary">Open Library</option>
+                <option value="googlebooks">Google Books API</option>
+                <option value="guardian">Guardian Books API</option>
+                <option value="youtube">YouTube learning videos</option>
+                <option value="gemini">Gemini AI oracle</option>
+              </select>
+            </label>
+            <label>Topic / desire
+              <input id="smartTopic" value="romantasy discipline, data science, style, confidence, mental health" />
+            </label>
+          </div>
+          <div id="onlineSourceStatus" class="notice mini-notice">Auto mode: offline cards never run out. Online sources are used when available.</div>
+          <div id="learnCard" class="learn-card"></div>
+          <div class="button-row">
+            <button id="newLearnCard" class="primary">Next endless card</button>
+            <button id="surpriseLearning" class="ghost">Surprise me</button>
+            <button id="saveLearnCard" class="ghost">Save card</button>
+            <button id="markLearned" class="ghost">Mark learned</button>
+          </div>
+        </article>
+        <article class="card">
+          <p class="small-label">Free learning portals</p>
+          <h2>Open a gate</h2>
+          <div id="learningLinks" class="link-grid"></div>
+        </article>
+        <article class="card">
+          <p class="small-label">Saved cards</p>
+          <div id="savedLearnCards" class="history"></div>
+        </article>
+      </section>
+
+      <section id="agents" class="panel">
+        <article class="card">
+          <p class="small-label">Inner court agents</p>
+          <h2>Rule-based now, ChatGPT-ready when you want depth</h2>
+          <p class="muted">Choose an agent, describe the situation, then copy the prompt into ChatGPT. No API key needed.</p>
+          <label>Situation<textarea id="agentSituation" placeholder="I’m avoiding studying / I need an outfit / I’m spiraling / I want a reading plan..."></textarea></label>
+          <div class="agent-grid" id="agentGrid"></div>
+          <textarea id="agentPrompt" readonly placeholder="Your generated prompt appears here."></textarea>
+          <div class="button-row">
+            <button id="copyAgentPrompt" class="primary">Copy prompt</button>
+            <button id="saveAgentNote" class="ghost">Save as note</button>
+          </div>
+        </article>
+      </section>
+
+      <section id="radar" class="panel">
+        <div class="grid two">
+          <article class="card">
+            <p class="small-label">Romantasy book radar</p>
+            <h2>Discover + track</h2>
+            <p class="muted">Search Open Library, save finds to your TBR, and use the quick links for latest news/release browsing.</p>
+            <label>Search books<input id="bookQuery" value="romantasy" /></label>
+            <button id="searchBooks" class="primary">Search books</button>
+            <div id="bookResults" class="book-results"></div>
+          </article>
+          <article class="card">
+            <p class="small-label">Radar links</p>
+            <h2>Latest-ish gates</h2>
+            <div id="radarLinks" class="link-grid"></div>
+          </article>
+        </div>
+        <article class="card">
+          <p class="small-label">Your TBR</p>
+          <div id="tbrList" class="history"></div>
+        </article>
+      </section>
+
+      <section id="mind" class="panel">
+        <article class="card emergency" id="emergencyResetCard">
+          <p class="small-label">Emergency reset</p>
+          <h2>When the shadows get loud</h2>
+          <p>This is not therapy. It is a grounding script for the next ten minutes.</p>
+          <ol class="reset-list">
+            <li>Name five things you can see.</li>
+            <li>Drink water or rinse your hands.</li>
+            <li>Put both feet on the floor. Exhale longer than you inhale.</li>
+            <li>Message one safe person: “Can you talk for a minute?”</li>
+            <li>Do one tiny visible thing: trash, bed, curtains, teeth.</li>
+          </ol>
+          <details>
+            <summary>France support</summary>
+            <p>If you feel at immediate risk of harming yourself, call <strong>3114</strong>, the French national suicide prevention helpline, free and available 24/7.</p>
+          </details>
+        </article>
+        <article class="card">
+          <p class="small-label">Thought alchemy</p>
+          <h2>Turn the spiral into strategy</h2>
+          <label>What happened factually?<textarea id="fact"></textarea></label>
+          <label>What story is my mind telling?<textarea id="story"></textarea></label>
+          <label>What is a kinder, truer version?<textarea id="kindTruth"></textarea></label>
+          <label>What is the next queen action?<textarea id="nextAction"></textarea></label>
+          <button id="saveAlchemy" class="primary">Save reset</button>
+          <div id="alchemyHistory" class="history"></div>
+        </article>
+      </section>
+
+      <section id="settings" class="panel">
+        <article class="card">
+          <p class="small-label">Samsung notification setup</p>
+          <h2>Reminders that actually help</h2>
+          <p class="muted">App notifications work best after the app is installed and recently opened. For exact daily alarms, import the calendar backup too.</p>
+          <div class="button-row">
+            <button id="enableNotifications" class="primary">Enable app notifications</button>
+            <button id="testNotification" class="ghost">Test</button>
+            <button id="downloadICS" class="ghost">Download calendar backup</button>
+          </div>
+          <div id="reminderEditor"></div>
+          <p id="notificationStatus" class="notice"></p>
+        </article>
+        <article class="card">
+          <p class="small-label">Data + reset</p>
+          <h2>Your local save file</h2>
+          <div class="button-row">
+            <button id="exportData" class="ghost">Export progress JSON</button>
+            <button id="importDataBtn" class="ghost">Import progress JSON</button>
+            <button id="hardReset" class="ghost danger">Reset app data</button>
+          </div>
+          <input id="importDataFile" type="file" accept="application/json" class="hidden" />
+        </article>
+        <article class="card">
+          <p class="small-label">API Vault</p>
+          <h2>Optional free keys for richer Smart Scroll</h2>
+          <p class="muted">Keys are stored only in this browser’s local storage on your phone. Do not paste paid/secret keys into a shared public device.</p>
+          <div class="grid two tiny-gap api-grid">
+            <label>Gemini API key<input id="geminiKey" type="password" placeholder="AI-generated personalized cards" /></label>
+            <label>Guardian API key<input id="guardianKey" type="password" placeholder="Books/fantasy news cards" /></label>
+            <label>YouTube Data API key<input id="youtubeKey" type="password" placeholder="Learning video cards" /></label>
+            <label>Google Books API key<input id="googleBooksKey" type="password" placeholder="Richer book discovery" /></label>
+          </div>
+          <div class="button-row">
+            <button id="saveApiKeys" class="primary">Save keys</button>
+            <button id="clearApiKeys" class="ghost danger">Clear keys</button>
+          </div>
+          <details>
+            <summary>Which keys are worth getting?</summary>
+            <ul class="reset-list compact-list">
+              <li><strong>Gemini:</strong> best for truly personalized smart cards.</li>
+              <li><strong>Guardian:</strong> good for book/fantasy culture news.</li>
+              <li><strong>YouTube:</strong> good for learning-video discovery, but search uses quota.</li>
+              <li><strong>Google Books:</strong> good for book metadata and recommendations.</li>
+            </ul>
+          </details>
+          <p id="apiStatus" class="notice mini-notice"></p>
+        </article>
+
+        <article class="card">
+          <p class="small-label">Installation</p>
+          <h2>Samsung setup</h2>
+          <ol class="reset-list">
+            <li>Host the folder on a free static host such as Netlify Drop or GitHub Pages.</li>
+            <li>Open the link in Chrome or Samsung Internet.</li>
+            <li>Tap menu → Install app / Add page to Home screen.</li>
+            <li>Open from your Home Screen, enable notifications, and import the calendar backup.</li>
+          </ol>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <template id="questTemplate">
+    <label class="quest-card">
+      <input type="checkbox" />
+      <span class="quest-icon"></span>
+      <span><strong class="quest-title"></strong><em class="quest-detail"></em></span>
+    </label>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>

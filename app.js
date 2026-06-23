@@ -7,7 +7,7 @@ const storage = {
   remove(key){ localStorage.removeItem(key); }
 };
 
-const APP_VERSION = 'v4.0-infinite';
+const APP_VERSION = 'v5.0-infinite-knowledge';
 const defaultReminders = [
   {id:'rise', time:'07:30', title:'Aelin: rise, fireheart', body:'Water, curtains, bed, oath. Begin before you feel ready.'},
   {id:'plan', time:'07:40', title:'Jude: choose the strategy', body:'Pick the top 3 moves. Your day needs a commander.'},
@@ -107,6 +107,12 @@ const learningLinks = [
   ['Khan Academy','Free lessons/practice for math, science, economics, history, and more.','https://www.khanacademy.org/'],
   ['freeCodeCamp','Free coding curriculum, projects, and certifications.','https://www.freecodecamp.org/'],
   ['OpenLearn','Free short courses from The Open University.','https://www.open.edu/openlearn/free-courses'],
+  ['OpenAlex','Scholarly works, authors, institutions, topics and citations.','https://openalex.org/'],
+  ['Crossref Metadata','Scholarly metadata lookup and DOI ecosystem.','https://www.crossref.org/'],
+  ['arXiv','Preprints in physics, math, CS, statistics and more.','https://arxiv.org/'],
+  ['Project Gutenberg','Public-domain ebooks and classics.','https://www.gutenberg.org/'],
+  ['Hacker News','Tech/startup/project discovery. Use intentionally.','https://news.ycombinator.com/'],
+  ['GitHub Explore','Find open-source projects and inspiration.','https://github.com/explore'],
   ['NHS CBT techniques','Structured self-help techniques for worries and unhelpful thoughts.','https://www.nhs.uk/every-mind-matters/mental-wellbeing-tips/self-help-cbt-techniques/'],
   ['CCI self-help workbooks','Free evidence-informed modules for anxiety, self-esteem, sleep and more.','https://www.cci.health.wa.gov.au/resources/looking-after-yourself'],
   ['Open Library','Search books with a free public-good library API/site.','https://openlibrary.org/']
@@ -302,14 +308,20 @@ function escapeHtml(s){ return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;',
 function toast(msg){ const n=document.createElement('div'); n.textContent=msg; Object.assign(n.style,{position:'fixed',left:'50%',bottom:'22px',transform:'translateX(-50%)',background:'rgba(0,0,0,.82)',color:'white',border:'1px solid rgba(255,255,255,.2)',padding:'12px 16px',borderRadius:'999px',zIndex:99,boxShadow:'0 10px 30px rgba(0,0,0,.35)'}); document.body.appendChild(n); setTimeout(()=>n.remove(),2200); }
 
 
-// --- V4 Infinite Smart Scroll + API Vault ---------------------------------
+// --- V5 Infinite Knowledge Smart Scroll + API Vault --------------------------
 const smartDomains = [
-  'data science', 'romantasy craft', 'confidence', 'style theory', 'financial calm', 'language precision',
+  'data science', 'AI agents', 'open-source tools', 'psychology', 'romantasy craft', 'public-domain classics',
+  'research methods', 'history', 'philosophy', 'style theory', 'financial calm', 'language precision',
   'fitness literacy', 'sleep hygiene', 'emotional regulation', 'study strategy', 'boundaries', 'career courage',
-  'wardrobe styling', 'nutrition basics', 'cleaning systems', 'book discovery', 'French-English fluency'
+  'wardrobe styling', 'nutrition basics', 'cleaning systems', 'book discovery', 'French-English fluency',
+  'software engineering', 'statistics', 'visual design', 'productivity systems', 'personal knowledge management'
 ];
+const repoSeeds = ['ai agent', 'personal knowledge management', 'data visualization', 'habit tracker', 'productivity', 'pwa', 'dashboard', 'automation', 'python data science', 'open source education', 'notion alternative', 'wardrobe app', 'study timer', 'llm tools'];
+const paperSeeds = ['mental wellbeing habits', 'exercise cognition', 'sleep learning', 'data science education', 'AI agents', 'recommendation systems', 'habit formation', 'emotion regulation', 'fashion psychology', 'reading fiction empathy'];
+const classicSeeds = ['mythology', 'gothic', 'fairy tales', 'folklore', 'women writers', 'adventure', 'poetry', 'philosophy', 'romance', 'fantasy'];
+const stackSites = ['stackoverflow', 'datascience', 'stats', 'academia', 'productivity', 'worldbuilding', 'literature'];
 const smartVibes = ['Aelin', 'Feyre', 'Poppy', 'Jude', 'Academic', 'Cozy', 'Dark Fae', 'Soft Court'];
-const smartVerbs = ['notice', 'define', 'compare', 'practice', 'rewrite', 'test', 'summarize', 'teach', 'track', 'choose', 'remove', 'prepare'];
+const smartVerbs = ['notice', 'define', 'compare', 'practice', 'rewrite', 'test', 'summarize', 'teach', 'track', 'choose', 'remove', 'prepare', 'bookmark', 'prototype', 'question', 'verify'];
 const smartIdeas = [
   ['Baseline first', 'Before changing a habit, observe it without shame. Data before drama.'],
   ['Friction is information', 'If you avoid something, the task may be too vague, too large, or emotionally loaded. Make it smaller.'],
@@ -320,7 +332,9 @@ const smartIdeas = [
   ['Curiosity breaks shame', 'Ask “what is this trying to protect me from?” before judging yourself.'],
   ['Default systems win', 'Make the good choice visible and the bad loop slightly harder to begin.'],
   ['Teach to learn', 'If you can explain an idea simply, you probably understand it.'],
-  ['Romantasy translation', 'Steal the heroine behavior, not the trauma: strategy, courage, loyalty, softness, endurance.']
+  ['Romantasy translation', 'Steal the heroine behavior, not the trauma: strategy, courage, loyalty, softness, endurance.'],
+  ['Useful beats viral', 'A source is worth your attention if it changes a decision, skill, question, or action.'],
+  ['One artifact rule', 'After consuming knowledge, create one artifact: a note, checklist, sketch, question, or tiny prototype.']
 ];
 const microQuests = [
   'Write a one-sentence summary in your own words.',
@@ -332,105 +346,233 @@ const microQuests = [
   'Ask: what would Jude do strategically, not emotionally?',
   'Ask: what would Feyre make beautiful or gentle here?',
   'Ask: what would Aelin do before feeling ready?',
-  'Ask: what would Poppy question instead of accepting?'
+  'Ask: what would Poppy question instead of accepting?',
+  'Bookmark only if you know exactly why you will return.',
+  'Write “I can use this for ___” or let it go.'
 ];
 const surpriseTopics = [
-  'romantasy heroines and courage', 'beginner data science habit', 'CBT thought reframing', 'capsule wardrobe styling',
-  'healthy no equipment workout', 'language learning micro habit', 'fantasy book releases', 'study motivation',
-  'budgeting for students', 'sleep routine and phone boundaries', 'outfit formulas for class', 'bodyweight workout form'
+  'new open-source tools for students', 'interesting GitHub repos to build with', 'beginner data science projects',
+  'old books about mythology and courage', 'psychology of habit formation', 'AI agents for personal productivity',
+  'romantasy heroines and courage', 'CBT thought reframing', 'capsule wardrobe styling', 'healthy no equipment workout',
+  'language learning micro habit', 'fantasy book releases', 'study motivation', 'budgeting for students',
+  'sleep routine and phone boundaries', 'outfit formulas for class', 'bodyweight workout form', 'research papers on learning',
+  'public domain gothic novels', 'Hacker News interesting projects', 'statistics intuition', 'personal knowledge management'
 ];
-function getApiKeys(){ return storage.get('apiKeys', {gemini:'', guardian:'', youtube:'', googleBooks:''}); }
-function masked(v){ return v ? 'saved ••••' + String(v).slice(-4) : ''; }
+function getApiKeys(){ return storage.get('apiKeys', {gemini:'', guardian:'', youtube:'', googleBooks:'', github:'', openAlex:''}); }
 function renderApiVault(){
   const keys=getApiKeys();
-  [['geminiKey','gemini'],['guardianKey','guardian'],['youtubeKey','youtube'],['googleBooksKey','googleBooks']].forEach(([id,k])=>{ const el=$('#'+id); if(el) el.value=keys[k]||''; });
+  [['geminiKey','gemini'],['guardianKey','guardian'],['youtubeKey','youtube'],['googleBooksKey','googleBooks'],['githubKey','github'],['openAlexKey','openAlex']].forEach(([id,k])=>{ const el=$('#'+id); if(el) el.value=keys[k]||''; });
   const status=[];
-  if(keys.gemini) status.push('Gemini'); if(keys.guardian) status.push('Guardian'); if(keys.youtube) status.push('YouTube'); if(keys.googleBooks) status.push('Google Books');
-  const s=$('#apiStatus'); if(s) s.textContent = status.length ? `Active optional sources: ${status.join(', ')}.` : 'No API keys saved yet. Smart Scroll still works forever offline.';
+  if(keys.gemini) status.push('Gemini'); if(keys.github) status.push('GitHub'); if(keys.openAlex) status.push('OpenAlex'); if(keys.guardian) status.push('Guardian'); if(keys.youtube) status.push('YouTube'); if(keys.googleBooks) status.push('Google Books');
+  const s=$('#apiStatus'); if(s) s.textContent = status.length ? `Active optional sources: ${status.join(', ')}. Public/no-key sources still work too.` : 'No API keys saved yet. Smart Scroll still works with public sources + infinite offline cards.';
 }
 function saveApiKeys(){
-  const keys={gemini:$('#geminiKey')?.value.trim()||'', guardian:$('#guardianKey')?.value.trim()||'', youtube:$('#youtubeKey')?.value.trim()||'', googleBooks:$('#googleBooksKey')?.value.trim()||''};
-  storage.set('apiKeys', keys); renderApiVault(); toast('API keys saved locally on this browser.');
+  const keys={gemini:$('#geminiKey')?.value.trim()||'', guardian:$('#guardianKey')?.value.trim()||'', youtube:$('#youtubeKey')?.value.trim()||'', googleBooks:$('#googleBooksKey')?.value.trim()||'', github:$('#githubKey')?.value.trim()||'', openAlex:$('#openAlexKey')?.value.trim()||''};
+  storage.set('apiKeys', keys); renderApiVault(); toast('API vault saved locally on this browser.');
 }
-function clearApiKeys(){ if(!confirm('Clear saved API keys from this browser?')) return; storage.remove('apiKeys'); renderApiVault(); toast('API keys cleared.'); }
-function smartTopic(){ return ($('#smartTopic')?.value || 'romantasy discipline, data science, style, confidence').trim(); }
+function clearApiKeys(){ if(!confirm('Clear saved API keys/tokens from this browser?')) return; storage.remove('apiKeys'); renderApiVault(); toast('API vault cleared.'); }
+function smartTopic(){ return ($('#smartTopic')?.value || 'data science, ai agents, psychology, old books, style').trim(); }
 function setSourceStatus(msg){ const el=$('#onlineSourceStatus'); if(el) el.textContent=msg; }
 function randomFrom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-0.5); }
 function getSmartSource(){ return $('#smartSource')?.value || 'auto'; }
 function randomLearnCard(advance=true){ nextSmartCard(advance); }
+function topicPieces(topic){ return topic.split(',').map(x=>x.trim()).filter(Boolean); }
+function primaryTopic(topic, fallback='knowledge'){ const parts=topicPieces(topic); return parts.length ? randomFrom(parts) : fallback; }
+function cleanText(x, n=360){ return String(x||'').replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/\s+/g,' ').trim().slice(0,n); }
+function yearsAgoDate(years){ const d=new Date(); d.setFullYear(d.getFullYear()-years); return d.toISOString().slice(0,10); }
+function cardUrl(url){ return url || ''; }
+function fetchJson(url, opts={}){ return fetch(url, opts).then(res=>{ if(!res.ok) throw new Error(`${res.status} ${url}`); return res.json(); }); }
+function sourceOrder(mode, count, keys){
+  const publicWide=['github','openalex','crossref','gutenberg','hn','wiki','europepmc','stackexchange','openlibrary'];
+  const research=['openalex','crossref','europepmc','arxiv'];
+  const optional=[];
+  if(keys.gemini && count%5===0) optional.push('gemini');
+  if(keys.guardian && count%6===0) optional.push('guardian');
+  if(keys.googleBooks && count%7===0) optional.push('googlebooks');
+  if(keys.youtube && count%8===0) optional.push('youtube');
+  if(mode==='auto' || mode==='universe') return [...optional, ...shuffle(publicWide), 'offline'];
+  if(mode==='studies') return [...shuffle(research), 'offline'];
+  return [mode, 'offline'];
+}
 async function nextSmartCard(advance=true){
   const count = storage.get('smartScrollCount',0) + (advance ? 1 : 0); if(advance) storage.set('smartScrollCount',count);
   const mode=getSmartSource(); const topic=smartTopic(); const keys=getApiKeys();
-  setSourceStatus('Forging a card...');
-  let order=[];
-  if(mode==='auto'){
-    order=['wiki','openlibrary'];
-    if(keys.gemini && count%3===0) order.unshift('gemini');
-    if(keys.guardian && count%4===0) order.unshift('guardian');
-    if(keys.googleBooks && count%5===0) order.unshift('googlebooks');
-    if(keys.youtube && count%7===0) order.unshift('youtube');
-    order.push('offline');
-  } else order=[mode,'offline'];
+  setSourceStatus('Opening a knowledge gate...');
+  const order=sourceOrder(mode, count, keys);
   for(const src of order){
     try{
       let card=null;
       if(src==='gemini') card=await fetchGeminiCard(topic, keys.gemini);
+      if(src==='github') card=await fetchGithubRepoCard(topic, keys.github);
+      if(src==='openalex') card=await fetchOpenAlexCard(topic, keys.openAlex);
+      if(src==='crossref') card=await fetchCrossrefCard(topic);
+      if(src==='europepmc') card=await fetchEuropePmcCard(topic);
+      if(src==='arxiv') card=await fetchArxivCard(topic);
+      if(src==='gutenberg') card=await fetchGutenbergCard(topic);
+      if(src==='hn') card=await fetchHNCard(topic);
+      if(src==='stackexchange') card=await fetchStackExchangeCard(topic);
       if(src==='wiki') card=await fetchWikiCard(topic);
       if(src==='openlibrary') card=await fetchOpenLibraryCard(topic);
       if(src==='guardian') card=await fetchGuardianCard(topic, keys.guardian);
       if(src==='youtube') card=await fetchYoutubeCard(topic, keys.youtube);
       if(src==='googlebooks') card=await fetchGoogleBooksCard(topic, keys.googleBooks);
       if(src==='offline') card=generateOfflineSmartCard(topic);
-      if(card){ displayLearnCard(card, advance); setSourceStatus(`Source: ${card.source || 'offline'}${card.generated ? ' · generated forever' : ''}`); return; }
+      if(card){ displayLearnCard(card, advance); setSourceStatus(`Source: ${card.source || src}. ${card.note || 'Read, save, or act — do not fall into the void.'}`); return; }
     } catch(e){ console.warn('Smart source failed', src, e); }
   }
   const fallback=generateOfflineSmartCard(topic); displayLearnCard(fallback, advance); setSourceStatus('Offline generator used. This never runs out.');
 }
 function generateOfflineSmartCard(topic){
   const domain = randomFrom(smartDomains); const vibe=randomFrom(smartVibes); const idea=randomFrom(smartIdeas); const verb=randomFrom(smartVerbs); const quest=randomFrom(microQuests);
-  const title = `${vibes[vibe]?.emoji || '✨'} ${idea[0]} for ${domain}`;
-  const context = topic.split(',').map(x=>x.trim()).filter(Boolean); const focus = context.length ? randomFrom(context) : domain;
-  return {cat:`Infinite offline · ${vibe}`, title, idea:`${idea[1]} Focus lens: ${focus}. Your move is to ${verb} something tiny rather than consume more content.`, action:quest, source:'Offline generator', generated:true};
+  const focus = primaryTopic(topic, domain);
+  const title = `${vibes[vibe]?.emoji || '✨'} ${idea[0]} · ${domain}`;
+  return {cat:`Infinite offline · ${vibe}`, title, idea:`${idea[1]} Focus lens: ${focus}. Your move is to ${verb} something tiny rather than consume more content.`, action:quest, source:'Offline generator', generated:true, note:'Generated forever with no internet.'};
 }
 function displayLearnCard(card, advance=true){
   currentLearnCard=card;
-  const used=storage.get('learnCardHistory',[]); if(advance) storage.set('learnCardHistory',[card.title,...used].slice(0,80));
+  const used=storage.get('learnCardHistory',[]); if(advance) storage.set('learnCardHistory',[card.title,...used].slice(0,120));
   const url = card.url ? `<a class="source-link" target="_blank" rel="noopener" href="${escapeHtml(card.url)}">Open source ↗</a>` : '';
   const source = card.source ? `<span class="pill">${escapeHtml(card.source)}</span>` : '';
   const topic = card.topic ? `<span class="pill">${escapeHtml(card.topic)}</span>` : '';
   $('#learnCard').innerHTML=`<div class="meta-row"><span class="category">${escapeHtml(card.cat || 'Smart Scroll')}</span>${source}${topic}</div><h3>${escapeHtml(card.title || 'Untitled card')}</h3><p>${escapeHtml(card.idea || '')}</p><p class="action"><strong>Quest:</strong> ${escapeHtml(card.action || 'Turn this into one small action today.')}</p>${url}`;
 }
+async function fetchGithubRepoCard(topic, token){
+  const seed=primaryTopic(topic, randomFrom(repoSeeds));
+  const since=yearsAgoDate(1);
+  const q=`${seed} stars:>20 pushed:>${since} fork:false archived:false`;
+  const headers={'Accept':'application/vnd.github+json'}; if(token) headers.Authorization=`Bearer ${token}`;
+  const data=await fetchJson(`https://api.github.com/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc&per_page=25`, {headers});
+  const items=(data.items||[]).filter(r=>r.full_name && !r.archived);
+  if(!items.length) return null;
+  const r=randomFrom(items.slice(0,18));
+  const desc=cleanText(r.description || 'No description provided.', 260);
+  return {cat:'Build gate · GitHub', title:r.full_name, idea:`${desc} Language: ${r.language || 'mixed/unknown'} · ⭐ ${r.stargazers_count || 0} · updated ${String(r.pushed_at||'').slice(0,10)}.`, action:'Open the README. Decide: could this help you build, learn, or automate something this month?', source:'GitHub Search API', url:r.html_url, topic:seed, note: token ? 'Using your optional GitHub token.' : 'Public GitHub search; optional token raises limits.'};
+}
+function abstractFromOpenAlex(inv){
+  if(!inv || typeof inv !== 'object') return '';
+  const pairs=[]; Object.entries(inv).forEach(([word,positions])=>{ (positions||[]).forEach(pos=>pairs[pos]=word); });
+  return cleanText(pairs.join(' '), 420);
+}
+async function fetchOpenAlexCard(topic, key){
+  const q=primaryTopic(topic, randomFrom(paperSeeds));
+  const params=new URLSearchParams({search:q, 'per-page':'25', sort:'cited_by_count:desc', filter:`from_publication_date:${yearsAgoDate(6)}`});
+  if(key) params.set('api_key', key);
+  let data=await fetchJson(`https://api.openalex.org/works?${params.toString()}`);
+  let results=data.results||[];
+  if(!results.length){ params.delete('filter'); data=await fetchJson(`https://api.openalex.org/works?${params.toString()}`); results=data.results||[]; }
+  if(!results.length) return null;
+  const w=randomFrom(results.slice(0,20));
+  const authors=(w.authorships||[]).slice(0,3).map(a=>a.author?.display_name).filter(Boolean).join(', ') || 'Unknown authors';
+  const abstract=abstractFromOpenAlex(w.abstract_inverted_index) || `Published ${w.publication_year || 'n.d.'}; cited by ${w.cited_by_count || 0}; type: ${w.type || 'work'}.`;
+  return {cat:'Study gate · OpenAlex', title:cleanText(w.display_name || 'Untitled work',160), idea:`${authors}. ${abstract}`, action:'Write the research question in plain English and one possible limitation before trusting it.', source:'OpenAlex', url:cardUrl(w.doi || w.id), topic:q, note:key ? 'Using optional OpenAlex key.' : 'Scholarly metadata source.'};
+}
+async function fetchCrossrefCard(topic){
+  const q=primaryTopic(topic, randomFrom(paperSeeds));
+  const params=new URLSearchParams({query:q, rows:'20', sort:'published', order:'desc', filter:`from-pub-date:${yearsAgoDate(8)}`});
+  const data=await fetchJson(`https://api.crossref.org/works?${params.toString()}`);
+  const items=(data.message?.items||[]).filter(x=>x.title?.length);
+  if(!items.length) return null;
+  const w=randomFrom(items.slice(0,18));
+  const authors=(w.author||[]).slice(0,3).map(a=>[a.given,a.family].filter(Boolean).join(' ')).filter(Boolean).join(', ') || 'Unknown authors';
+  const title=cleanText(w.title?.[0] || 'Untitled scholarly work',160);
+  const pub=(w.published?.['date-parts']?.[0]||[]).join('-') || w.created?.['date-time']?.slice(0,10) || 'n.d.';
+  const container=cleanText((w['container-title']||[])[0] || w.publisher || 'Unknown venue',120);
+  return {cat:'Study gate · Crossref', title, idea:`${authors}. ${container} · ${pub}. ${cleanText(w.abstract || 'Metadata card: open the source to inspect abstract/full text availability.',320)}`, action:'Before saving: identify topic, method, and whether it is a paper, book chapter, preprint, or review.', source:'Crossref', url:cardUrl(w.URL || (w.DOI?`https://doi.org/${w.DOI}`:'')), topic:q};
+}
+async function fetchEuropePmcCard(topic){
+  const q=primaryTopic(topic, randomFrom(['sleep learning','exercise mental health','habit formation','emotion regulation','nutrition students']));
+  const params=new URLSearchParams({query:q, format:'json', pageSize:'20', sort:'CITED desc'});
+  const data=await fetchJson(`https://www.ebi.ac.uk/europepmc/webservices/rest/search?${params.toString()}`);
+  const items=data.resultList?.result || [];
+  if(!items.length) return null;
+  const r=randomFrom(items.slice(0,18));
+  const title=cleanText(r.title || 'Untitled Europe PMC result',160);
+  const url=r.doi ? `https://doi.org/${r.doi}` : `https://europepmc.org/article/${encodeURIComponent(r.source||'MED')}/${encodeURIComponent(r.id||'')}`;
+  return {cat:'Life science gate · Europe PMC', title, idea:`${cleanText(r.authorString || 'Unknown authors',140)} · ${r.journalTitle || r.source || 'Europe PMC'} · ${r.pubYear || 'n.d.'}. ${cleanText(r.abstractText || 'Open the record for abstract/full text availability.',350)}`, action:'Translate the finding into one cautious sentence. Do not turn one paper into a life rule.', source:'Europe PMC', url, topic:q};
+}
+async function fetchArxivCard(topic){
+  const q=primaryTopic(topic, randomFrom(['artificial intelligence','data visualization','statistics','machine learning','human computer interaction']));
+  const url=`https://export.arxiv.org/api/query?search_query=all:${encodeURIComponent(q)}&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending`;
+  const res=await fetch(url); if(!res.ok) throw new Error('arxiv');
+  const text=await res.text();
+  const xml=new DOMParser().parseFromString(text,'application/xml');
+  const entries=Array.from(xml.querySelectorAll('entry'));
+  if(!entries.length) return null;
+  const e=randomFrom(entries);
+  const title=cleanText(e.querySelector('title')?.textContent || 'arXiv preprint',160);
+  const summary=cleanText(e.querySelector('summary')?.textContent || '',420);
+  const authors=Array.from(e.querySelectorAll('author name')).slice(0,3).map(n=>n.textContent).join(', ') || 'Unknown authors';
+  const link=Array.from(e.querySelectorAll('link')).find(l=>l.getAttribute('rel')==='alternate')?.getAttribute('href') || url;
+  return {cat:'Preprint gate · arXiv', title, idea:`${authors}. ${summary}`, action:'Ask: what problem does this solve, and what would I need to learn to understand it?', source:'arXiv', url:link, topic:q, note:'If arXiv is blocked by browser CORS, use another research source.'};
+}
+async function fetchGutenbergCard(topic){
+  const q=primaryTopic(topic, randomFrom(classicSeeds));
+  let data=await fetchJson(`https://gutendex.com/books/?search=${encodeURIComponent(q)}`);
+  let books=(data.results||[]).filter(b=>b.title);
+  if(!books.length){ data=await fetchJson(`https://gutendex.com/books/?languages=en&sort=popular`); books=data.results||[]; }
+  if(!books.length) return null;
+  const b=randomFrom(books.slice(0,24));
+  const authors=(b.authors||[]).map(a=>`${a.name}${a.birth_year?` (${a.birth_year}–${a.death_year||''})`:''}`).join(', ') || 'Unknown author';
+  const subjects=(b.subjects||[]).slice(0,5).join('; ');
+  const htmlUrl=b.formats?.['text/html'] || b.formats?.['text/html; charset=utf-8'] || b.formats?.['application/epub+zip'] || `https://www.gutenberg.org/ebooks/${b.id}`;
+  return {cat:'Old book gate · Gutenberg', title:b.title, idea:`${authors}. Subjects: ${subjects || 'not listed'}. Downloads: ${b.download_count || 'n.d.'}.`, action:'Read the first page. Save one sentence that still feels alive today.', source:'Gutendex / Project Gutenberg metadata', url:htmlUrl, topic:q};
+}
+async function fetchHNCard(topic){
+  const listName=Math.random()<0.5?'topstories':'newstories';
+  const ids=await fetchJson(`https://hacker-news.firebaseio.com/v0/${listName}.json?print=pretty`);
+  if(!ids?.length) return null;
+  for(const id of shuffle(ids.slice(0,80)).slice(0,12)){
+    const item=await fetchJson(`https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`);
+    if(item && item.title){
+      const url=item.url || `https://news.ycombinator.com/item?id=${id}`;
+      return {cat:'Tech curiosity gate · Hacker News', title:item.title, idea:`${item.score || 0} points · ${item.descendants || 0} comments. This is a discovery card, not a command to scroll forever.`, action:'Open only if the title can teach, inspire a project, or improve your tools. Otherwise skip like a queen.', source:'Hacker News API', url, topic:listName};
+    }
+  }
+  return null;
+}
+async function fetchStackExchangeCard(topic){
+  const q=primaryTopic(topic, randomFrom(['python data science','statistics regression','study habits','worldbuilding magic systems']));
+  const site = /stat|data|regression|model/i.test(q) ? 'stats' : /book|literature|novel|romantasy/i.test(q) ? 'literature' : /world|fantasy|magic/i.test(q) ? 'worldbuilding' : randomFrom(stackSites);
+  const params=new URLSearchParams({order:'desc', sort:'votes', q, site, pagesize:'12'});
+  const data=await fetchJson(`https://api.stackexchange.com/2.3/search/advanced?${params.toString()}`);
+  const items=data.items||[];
+  if(!items.length) return null;
+  const x=randomFrom(items.slice(0,12));
+  const title=cleanText(x.title || 'StackExchange question',180);
+  return {cat:`Answer gate · ${site}`, title, idea:`Score ${x.score || 0} · ${x.answer_count || 0} answers · ${x.is_answered ? 'answered' : 'not fully answered'}. Community answers can be useful, but verify important claims.`, action:'Open and extract one technique, warning, or better search phrase.', source:'StackExchange API', url:x.link, topic:q};
+}
 async function fetchWikiCard(topic){
-  const q=encodeURIComponent(topic.split(',')[0] || topic);
+  const q=encodeURIComponent(primaryTopic(topic, randomFrom(['history','science','art','philosophy','mythology','statistics'])));
   const url=`https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrsearch=${q}&gsrlimit=10&prop=extracts|info&exintro=1&explaintext=1&inprop=url`;
   const res=await fetch(url); if(!res.ok) throw new Error('wiki'); const data=await res.json(); const pages=Object.values(data.query?.pages || {}).filter(p=>p.extract);
-  if(!pages.length) return null; const p=randomFrom(pages); const extract=(p.extract||'').replace(/\s+/g,' ').slice(0,360);
-  return {cat:'Knowledge gate', title:p.title, idea:extract, action:'Summarize this in one sentence, then ask how it connects to your life today.', source:'Wikipedia/Wikimedia', url:p.fullurl, topic:topic};
+  if(!pages.length) return null; const p=randomFrom(pages); const extract=cleanText(p.extract,390);
+  return {cat:'Knowledge gate · Wikipedia', title:p.title, idea:extract, action:'Summarize this in one sentence, then ask how it connects to your life, studies, or style today.', source:'Wikipedia/Wikimedia', url:p.fullurl, topic:decodeURIComponent(q)};
 }
 async function fetchOpenLibraryCard(topic){
-  const q=encodeURIComponent(topic || 'romantasy fantasy'); const res=await fetch(`https://openlibrary.org/search.json?q=${q}&limit=20`); if(!res.ok) throw new Error('openlibrary'); const data=await res.json(); const docs=(data.docs||[]).filter(b=>b.title);
+  const q=encodeURIComponent(primaryTopic(topic, 'romantasy fantasy')); const res=await fetch(`https://openlibrary.org/search.json?q=${q}&limit=20`); if(!res.ok) throw new Error('openlibrary'); const data=await res.json(); const docs=(data.docs||[]).filter(b=>b.title);
   if(!docs.length) return null; const b=randomFrom(docs); const author=(b.author_name||[]).slice(0,2).join(', ') || 'Unknown author'; const year=b.first_publish_year || 'n.d.'; const key=b.key ? `https://openlibrary.org${b.key}` : `https://openlibrary.org/search?q=${q}`;
-  return {cat:'Book discovery', title:b.title, idea:`${author} · first published ${year}. Subjects/keywords: ${(b.subject||[]).slice(0,5).join(', ') || 'not listed'}.`, action:'Decide: TBR, library later, or skip. If TBR, write why in 5 words.', source:'Open Library', url:key, topic:topic};
+  return {cat:'Library gate · Open Library', title:b.title, idea:`${author} · first published ${year}. Subjects/keywords: ${(b.subject||[]).slice(0,5).join(', ') || 'not listed'}.`, action:'Decide: TBR, library later, or skip. If TBR, write why in 5 words.', source:'Open Library', url:key, topic:decodeURIComponent(q)};
 }
 async function fetchGoogleBooksCard(topic, key){
-  if(!key) throw new Error('Google Books key missing'); const q=encodeURIComponent(topic || 'romantasy'); const res=await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=20&key=${encodeURIComponent(key)}`); if(!res.ok) throw new Error('googlebooks'); const data=await res.json(); const items=(data.items||[]).map(x=>x.volumeInfo).filter(Boolean);
-  if(!items.length) return null; const b=randomFrom(items); const desc=(b.description||'No description available.').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').slice(0,360);
-  return {cat:'Google Books', title:b.title || 'Book find', idea:`${(b.authors||['Unknown author']).join(', ')}. ${desc}`, action:'Read the description critically: what trope, promise, or theme is being sold?', source:'Google Books', url:b.infoLink, topic:topic};
+  if(!key) throw new Error('Google Books key missing'); const q=encodeURIComponent(primaryTopic(topic,'romantasy')); const res=await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=20&key=${encodeURIComponent(key)}`); if(!res.ok) throw new Error('googlebooks'); const data=await res.json(); const items=(data.items||[]).map(x=>x.volumeInfo).filter(Boolean);
+  if(!items.length) return null; const b=randomFrom(items); const desc=cleanText(b.description||'No description available.',360);
+  return {cat:'Book gate · Google Books', title:b.title || 'Book find', idea:`${(b.authors||['Unknown author']).join(', ')}. ${desc}`, action:'Read the description critically: what trope, promise, or theme is being sold?', source:'Google Books', url:b.infoLink, topic:decodeURIComponent(q)};
 }
 async function fetchGuardianCard(topic, key){
-  if(!key) throw new Error('Guardian key missing'); const q=encodeURIComponent(topic || 'romantasy books OR fantasy books');
+  if(!key) throw new Error('Guardian key missing'); const q=encodeURIComponent(primaryTopic(topic, 'romantasy books OR fantasy books'));
   const url=`https://content.guardianapis.com/search?q=${q}&section=books|culture&show-fields=trailText,headline,shortUrl&order-by=newest&page-size=20&api-key=${encodeURIComponent(key)}`;
-  const res=await fetch(url); if(!res.ok) throw new Error('guardian'); const data=await res.json(); const results=data.response?.results || []; if(!results.length) return null; const a=randomFrom(results); const fields=a.fields||{}; const trail=(fields.trailText||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').slice(0,360);
-  return {cat:'Romantasy / book radar', title:fields.headline || a.webTitle, idea:trail || a.webTitle, action:'Open only if it serves you: save one title, trend, or idea — then leave the feed.', source:'The Guardian', url:a.webUrl || fields.shortUrl, topic:topic};
+  const res=await fetch(url); if(!res.ok) throw new Error('guardian'); const data=await res.json(); const results=data.response?.results || []; if(!results.length) return null; const a=randomFrom(results); const fields=a.fields||{}; const trail=cleanText(fields.trailText||'',360);
+  return {cat:'Book/culture radar · Guardian', title:fields.headline || a.webTitle, idea:trail || a.webTitle, action:'Open only if it serves you: save one title, trend, or idea — then leave the feed.', source:'The Guardian', url:a.webUrl || fields.shortUrl, topic:decodeURIComponent(q)};
 }
 async function fetchYoutubeCard(topic, key){
-  if(!key) throw new Error('YouTube key missing'); const q=encodeURIComponent(topic || 'study motivation beginner workout style tips');
+  if(!key) throw new Error('YouTube key missing'); const q=encodeURIComponent(primaryTopic(topic,'study motivation beginner workout style tips'));
   const res=await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=12&q=${q}&safeSearch=moderate&key=${encodeURIComponent(key)}`); if(!res.ok) throw new Error('youtube'); const data=await res.json(); const vids=(data.items||[]).filter(v=>v.id?.videoId); if(!vids.length) return null; const v=randomFrom(vids); const sn=v.snippet||{};
-  return {cat:'Video learning gate', title:sn.title || 'Learning video', idea:`${sn.channelTitle || 'YouTube'} — ${(sn.description||'').slice(0,260)}`, action:'Watch with a mission: write 3 notes and 1 action. No autoplay rabbit hole.', source:'YouTube Data API', url:`https://www.youtube.com/watch?v=${v.id.videoId}`, topic:topic};
+  return {cat:'Video gate · YouTube', title:sn.title || 'Learning video', idea:`${sn.channelTitle || 'YouTube'} — ${cleanText(sn.description||'',260)}`, action:'Watch with a mission: write 3 notes and 1 action. No autoplay rabbit hole.', source:'YouTube Data API', url:`https://www.youtube.com/watch?v=${v.id.videoId}`, topic:decodeURIComponent(q)};
 }
 async function fetchGeminiCard(topic, key){
   if(!key) throw new Error('Gemini key missing');
-  const body={contents:[{parts:[{text:`Create one compact Smart Scroll learning card for Ilona's Romantasy Queen OS app. Topic: ${topic}. Blend practical self-improvement, learning, style, fitness, books, and romantasy energy without medical advice. Return ONLY valid JSON with keys cat,title,idea,action. Keep idea under 70 words and action under 25 words.`}]}], generationConfig:{temperature:0.9, maxOutputTokens:350}};
+  const body={contents:[{parts:[{text:`Create one compact Smart Scroll learning card for Ilona's Romantasy Queen OS app. Topic: ${topic}. It can be about science, old books, GitHub/building, research, history, psychology, style, fitness, language, productivity, or romantasy craft. Return ONLY valid JSON with keys cat,title,idea,action. Keep idea under 85 words and action under 28 words. No medical advice.`}]}], generationConfig:{temperature:0.95, maxOutputTokens:420}};
   const models=['gemini-2.5-flash-lite','gemini-2.5-flash','gemini-2.0-flash'];
   let lastErr;
   for(const model of models){
@@ -438,7 +580,7 @@ async function fetchGeminiCard(topic, key){
       const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
       if(!res.ok) { lastErr=new Error('gemini '+res.status); continue; }
       const data=await res.json(); const txt=data.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('\n') || ''; const jsonText=(txt.match(/\{[\s\S]*\}/)||[])[0]; if(!jsonText) throw new Error('no json'); const obj=JSON.parse(jsonText);
-      return {cat:obj.cat || 'AI oracle', title:obj.title || 'Generated card', idea:obj.idea || '', action:obj.action || 'Choose one small action.', source:`Gemini API (${model})`, topic:topic};
+      return {cat:obj.cat || 'AI oracle', title:obj.title || 'Generated card', idea:obj.idea || '', action:obj.action || 'Choose one small action.', source:`Gemini API (${model})`, topic:topic, note:'Personalized card from your API key.'};
     }catch(e){ lastErr=e; }
   }
   throw lastErr || new Error('gemini failed');

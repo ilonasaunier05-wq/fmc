@@ -4,20 +4,20 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#3b1b4f" />
-  <meta name="description" content="Romantasy Queen OS V4: infinite smart scroll, API-powered learning, workouts, wardrobe planner, and Samsung reminders." />
+  <meta name="description" content="Romantasy Queen OS V5: infinite knowledge smart scroll, workouts, wardrobe planner, and Samsung reminders." />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="assets/icon-192.png" />
   <link rel="stylesheet" href="styles.css" />
-  <title>Romantasy Queen OS V2</title>
+  <title>Romantasy Queen OS V5</title>
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
       <div class="hero-top">
         <div>
-          <p class="eyebrow">Samsung / Android PWA · V2</p>
+          <p class="eyebrow">Samsung / Android PWA · V5 Infinite Knowledge</p>
           <h1>Romantasy Queen OS</h1>
-          <p class="subtitle">Training, wardrobe, infinite smart scroll, API-powered agents, and daily quests.</p>
+          <p class="subtitle">Training, wardrobe, infinite knowledge scroll, API-powered agents, and daily quests.</p>
         </div>
         <button id="installBtn" class="ghost hidden">Install</button>
       </div>
@@ -166,25 +166,35 @@
         <article class="card smart-card">
           <p class="small-label">Smart scroller</p>
           <h2>Replace doomscrolling with tiny power</h2>
-          <p class="muted">This is now an endless scroll: offline-generated cards forever, plus optional online cards from free sources and your own free API keys.</p>
+          <p class="muted">This is now an endless knowledge engine: GitHub repos, research papers, old books, tech discoveries, wiki knowledge, public libraries, videos, AI cards, and offline generated cards forever.</p>
           <div class="smart-controls">
             <label>Mode
               <select id="smartSource">
-                <option value="auto">Auto mix</option>
-                <option value="offline">Offline infinite</option>
+                <option value="auto">Auto Universe mix</option>
+                <option value="universe">Random knowledge universe</option>
+                <option value="github">New/useful GitHub repos</option>
+                <option value="studies">Research studies mix</option>
+                <option value="openalex">OpenAlex papers</option>
+                <option value="crossref">Crossref scholarly metadata</option>
+                <option value="europepmc">Europe PMC life-science papers</option>
+                <option value="arxiv">arXiv preprints</option>
+                <option value="gutenberg">Old/public-domain books</option>
+                <option value="hn">Hacker News discoveries</option>
+                <option value="stackexchange">StackExchange answers</option>
                 <option value="wiki">Wikipedia / Wikimedia</option>
                 <option value="openlibrary">Open Library</option>
                 <option value="googlebooks">Google Books API</option>
                 <option value="guardian">Guardian Books API</option>
                 <option value="youtube">YouTube learning videos</option>
                 <option value="gemini">Gemini AI oracle</option>
+                <option value="offline">Offline infinite</option>
               </select>
             </label>
             <label>Topic / desire
-              <input id="smartTopic" value="romantasy discipline, data science, style, confidence, mental health" />
+              <input id="smartTopic" value="data science, ai agents, productivity, psychology, old books, style, romantasy" />
             </label>
           </div>
-          <div id="onlineSourceStatus" class="notice mini-notice">Auto mode: offline cards never run out. Online sources are used when available.</div>
+          <div id="onlineSourceStatus" class="notice mini-notice">Auto Universe: rotates through public knowledge sources and falls back to infinite offline generation.</div>
           <div id="learnCard" class="learn-card"></div>
           <div class="button-row">
             <button id="newLearnCard" class="primary">Next endless card</button>
@@ -192,6 +202,16 @@
             <button id="saveLearnCard" class="ghost">Save card</button>
             <button id="markLearned" class="ghost">Mark learned</button>
           </div>
+          <details>
+            <summary>What does “everything” include?</summary>
+            <ul class="reset-list compact-list">
+              <li><strong>Build:</strong> interesting GitHub repos and developer answers.</li>
+              <li><strong>Study:</strong> papers from OpenAlex, Crossref, Europe PMC, and arXiv.</li>
+              <li><strong>Read:</strong> public-domain classics and library/book metadata.</li>
+              <li><strong>Know:</strong> Wikipedia/Wikimedia, Hacker News, videos, and offline micro-lessons.</li>
+              <li><strong>Act:</strong> every card ends with a tiny quest so it becomes life, not doomscrolling.</li>
+            </ul>
+          </details>
         </article>
         <article class="card">
           <p class="small-label">Free learning portals</p>
@@ -299,6 +319,8 @@
           <p class="muted">Keys are stored only in this browser’s local storage on your phone. Do not paste paid/secret keys into a shared public device.</p>
           <div class="grid two tiny-gap api-grid">
             <label>Gemini API key<input id="geminiKey" type="password" placeholder="AI-generated personalized cards" /></label>
+            <label>GitHub token optional<input id="githubKey" type="password" placeholder="Higher GitHub API limits" /></label>
+            <label>OpenAlex API key optional<input id="openAlexKey" type="password" placeholder="Scholarly API key if you get one" /></label>
             <label>Guardian API key<input id="guardianKey" type="password" placeholder="Books/fantasy news cards" /></label>
             <label>YouTube Data API key<input id="youtubeKey" type="password" placeholder="Learning video cards" /></label>
             <label>Google Books API key<input id="googleBooksKey" type="password" placeholder="Richer book discovery" /></label>
@@ -311,6 +333,8 @@
             <summary>Which keys are worth getting?</summary>
             <ul class="reset-list compact-list">
               <li><strong>Gemini:</strong> best for truly personalized smart cards.</li>
+              <li><strong>GitHub token:</strong> optional; helps avoid low unauthenticated limits while searching public repos.</li>
+              <li><strong>OpenAlex:</strong> optional; scholarly papers also try to work without a key.</li>
               <li><strong>Guardian:</strong> good for book/fantasy culture news.</li>
               <li><strong>YouTube:</strong> good for learning-video discovery, but search uses quota.</li>
               <li><strong>Google Books:</strong> good for book metadata and recommendations.</li>
